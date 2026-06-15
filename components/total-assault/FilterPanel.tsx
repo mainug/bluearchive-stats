@@ -10,10 +10,10 @@ interface Props {
   filters: Filters
   onChange: (f: Filters) => void
   totalCount: number
+  availableDifficulties: Difficulty[]
 }
 
-const DIFFICULTIES: { value: Difficulty | 'all'; label: string }[] = [
-  { value: 'all', label: '전체' },
+const DIFFICULTY_OPTIONS: { value: Difficulty; label: string }[] = [
   { value: 'torment', label: '토먼트' },
   { value: 'insane', label: '인세인' },
   { value: 'extreme', label: '익스트림' },
@@ -40,7 +40,7 @@ function Chip({ active, label, onClick }: { active: boolean; label: string; onCl
   )
 }
 
-export default function FilterPanel({ filters, onChange, totalCount }: Props) {
+export default function FilterPanel({ filters, onChange, totalCount, availableDifficulties }: Props) {
   return (
     <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px', marginBottom: 12 }}>
       <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
@@ -48,7 +48,12 @@ export default function FilterPanel({ filters, onChange, totalCount }: Props) {
       </div>
       <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6 }}>난이도</div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
-        {DIFFICULTIES.map(d => (
+        <Chip
+          active={filters.difficulty === 'all'}
+          label="전체"
+          onClick={() => onChange({ ...filters, difficulty: 'all' })}
+        />
+        {DIFFICULTY_OPTIONS.filter(d => availableDifficulties.includes(d.value)).map(d => (
           <Chip
             key={d.value}
             active={filters.difficulty === d.value}

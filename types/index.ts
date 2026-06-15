@@ -1,10 +1,8 @@
-export type Terrain = 'indoor' | 'outdoor' | 'special'
+export type Terrain = 'indoor' | 'outdoor' | 'special' | 'urban'
 export type Difficulty = 'extreme' | 'insane' | 'torment'
 export type AttackType = 'explosive' | 'piercing' | 'mystic' | 'sonic'
 export type ArmorType = 'light' | 'heavy' | 'special' | 'elastic'
 export type Role = 'striker' | 'special'
-export type ClearRank = 'SS' | 'S' | 'A' | 'B' | 'C'
-
 export interface Boss {
   id: string
   nameKo: string
@@ -31,7 +29,6 @@ export interface Submission {
   id: string
   bossId: string
   difficulty: Difficulty
-  rank: ClearRank
   score: number
   parties: string[][]
   season: number

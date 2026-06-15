@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { X, Users, Plus, Trash2 } from 'lucide-react'
-import { Boss, Difficulty, ClearRank } from '@/types'
+import { Boss, Difficulty } from '@/types'
 import { STUDENTS } from '@/data/students'
 import { DIFFICULTY_LABEL } from '@/data/bosses'
 import StudentAvatar from '@/components/ui/StudentAvatar'
@@ -10,16 +10,15 @@ import CharacterPicker from './CharacterPicker'
 
 interface Props {
   boss: Boss
+  availableDifficulties: Difficulty[]
   onClose: () => void
   onSubmit: (data: {
     difficulty: Difficulty
-    rank: ClearRank
     score: number
     parties: string[][]
   }) => Promise<void>
 }
 
-const RANKS: ClearRank[] = ['SS', 'S', 'A', 'B', 'C']
 const MAX_PARTIES = 6
 
 function SelectBtn({ value, current, onClick, children }: { value: string; current: string; onClick: () => void; children: React.ReactNode }) {
@@ -72,9 +71,10 @@ function PartyRow({
   )
 }
 
-export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
-  const [difficulty, setDifficulty] = useState<Difficulty>('insane')
-  const [rank, setRank] = useState<ClearRank>('SS')
+export default function SubmitModal({ boss, availableDifficulties, onClose, onSubmit }: Props) {
+  const [difficulty, setDifficulty] = useState<Difficulty>(
+    availableDifficulties[0] ?? 'insane'
+  )
   const [score, setScore] = useState('')
   const [parties, setParties] = useState<string[][]>([[]])
   const [pickerIndex, setPickerIndex] = useState<number | null>(null)
@@ -105,7 +105,7 @@ export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
     setSubmitting(true)
     setErrorMsg('')
     try {
-      await onSubmit({ difficulty, rank, score: parsed, parties: parties.filter(p => p.length > 0) })
+      await onSubmit({ difficulty, score: parsed, parties: parties.filter(p => p.length > 0) })
       onClose()
     } catch (e: any) {
       setErrorMsg(e?.message ?? '제출 중 오류가 발생했습니다')
@@ -128,17 +128,8 @@ export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
           <div style={{ marginBottom: 16 }}>
             <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>난이도</div>
             <div style={{ display: 'flex', gap: 6 }}>
-              {(['torment', 'insane', 'extreme'] as Difficulty[]).map(d => (
+              {availableDifficulties.map(d => (
                 <SelectBtn key={d} value={d} current={difficulty} onClick={() => setDifficulty(d)}>{DIFFICULTY_LABEL[d]}</SelectBtn>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: 16 }}>
-            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>랭크</div>
-            <div style={{ display: 'flex', gap: 6 }}>
-              {RANKS.map(r => (
-                <SelectBtn key={r} value={r} current={rank} onClick={() => setRank(r)}>{r}</SelectBtn>
               ))}
             </div>
           </div>
