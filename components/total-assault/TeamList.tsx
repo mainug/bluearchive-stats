@@ -18,7 +18,7 @@ const RANK_STYLE: Record<string, { bg: string; color: string }> = {
 function StudentIcon({ studentId }: { studentId: string }) {
   const s = getStudentById(studentId)
   if (!s) return null
-  return <StudentAvatar student={s} size={30} radius={6} fontSize={9} />
+  return <StudentAvatar student={s} size={28} radius={6} fontSize={9} />
 }
 
 export default function TeamList({ submissions }: Props) {
@@ -42,14 +42,17 @@ export default function TeamList({ submissions }: Props) {
                 {DIFFICULTY_LABEL[sub.difficulty]}
               </span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              {sub.party1.map(id => <StudentIcon key={id} studentId={id} />)}
-              {sub.party2.length > 0 && (
-                <>
-                  <div style={{ width: 1, height: 20, background: 'var(--border)', margin: '0 4px' }} />
-                  {sub.party2.map(id => <StudentIcon key={id} studentId={id} />)}
-                </>
-              )}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+              {sub.parties.map((party, pi) => (
+                <div key={pi} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <span style={{ fontSize: 10, color: 'var(--text-muted)', width: 28, flexShrink: 0 }}>
+                    {pi + 1}P
+                  </span>
+                  <div style={{ display: 'flex', gap: 4 }}>
+                    {party.map(id => <StudentIcon key={id} studentId={id} />)}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )

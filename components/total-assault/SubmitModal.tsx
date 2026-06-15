@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Users } from 'lucide-react'
+import { X, Users, Plus, Trash2 } from 'lucide-react'
 import { Boss, Difficulty, ClearRank } from '@/types'
-import { STUDENTS, getSchoolColor } from '@/data/students'
+import { STUDENTS } from '@/data/students'
 import { DIFFICULTY_LABEL } from '@/data/bosses'
 import StudentAvatar from '@/components/ui/StudentAvatar'
 import CharacterPicker from './CharacterPicker'
@@ -15,12 +15,12 @@ interface Props {
     difficulty: Difficulty
     rank: ClearRank
     score: number
-    party1: string[]
-    party2: string[]
+    parties: string[][]
   }) => Promise<void>
 }
 
 const RANKS: ClearRank[] = ['SS', 'S', 'A', 'B', 'C']
+const MAX_PARTIES = 6
 
 function SelectBtn({ value, current, onClick, children }: { value: string; current: string; onClick: () => void; children: React.ReactNode }) {
   return (
@@ -36,28 +36,38 @@ function SelectBtn({ value, current, onClick, children }: { value: string; curre
   )
 }
 
-function PartySlots({ party, onEdit }: { party: string[]; onEdit: () => void }) {
+function PartyRow({
+  index, party, onEdit, onRemove, canRemove,
+}: {
+  index: number; party: string[]; onEdit: () => void; onRemove: () => void; canRemove: boolean
+}) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      <div style={{ display: 'flex', gap: 6 }}>
+    <div style={{ background: 'var(--bg-surface-2)', borderRadius: 9, padding: '10px 12px', display: 'flex', alignItems: 'center', gap: 10 }}>
+      <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', width: 30, flexShrink: 0 }}>{index + 1}파티</span>
+      <div style={{ display: 'flex', gap: 5, flex: 1 }}>
         {Array.from({ length: 4 }).map((_, i) => {
           const id = party[i]
           const s = id ? STUDENTS.find(x => x.id === id) : null
           return s ? (
-            <StudentAvatar key={i} student={s} size={38} radius={9} />
+            <StudentAvatar key={i} student={s} size={34} radius={8} fontSize={10} />
           ) : (
-            <div key={i} style={{ width: 38, height: 38, borderRadius: 9, border: '1.5px dashed var(--border)', background: 'var(--bg-surface-2)' }} />
+            <div key={i} style={{ width: 34, height: 34, borderRadius: 8, border: '1.5px dashed var(--border)' }} />
           )
         })}
       </div>
       <button onClick={onEdit} style={{
-        marginLeft: 4, padding: '6px 12px', borderRadius: 7, border: '1px solid var(--border)',
-        background: 'var(--bg-surface-2)', color: 'var(--text-secondary)', fontSize: 12,
-        cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5,
+        padding: '5px 10px', borderRadius: 6, border: '1px solid var(--border)',
+        background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontSize: 11,
+        cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0,
       }}>
-        <Users size={13} />
+        <Users size={11} />
         {party.length > 0 ? '수정' : '선택'}
       </button>
+      {canRemove && (
+        <button onClick={onRemove} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 2, flexShrink: 0 }}>
+          <Trash2 size={14} />
+        </button>
+      )}
     </div>
   )
 }
@@ -66,13 +76,27 @@ export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
   const [difficulty, setDifficulty] = useState<Difficulty>('insane')
   const [rank, setRank] = useState<ClearRank>('SS')
   const [score, setScore] = useState('')
-  const [party1, setParty1] = useState<string[]>([])
-  const [party2, setParty2] = useState<string[]>([])
-  const [picker, setPicker] = useState<1 | 2 | null>(null)
+  const [parties, setParties] = useState<string[][]>([[]])
+  const [pickerIndex, setPickerIndex] = useState<number | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
 
-  const canSubmit = party1.length >= 1 && score.trim() !== ''
+  const canSubmit = parties[0]?.length >= 1 && score.trim() !== ''
+
+  const addParty = () => {
+    if (parties.length < MAX_PARTIES) setParties(prev => [...prev, []])
+  }
+
+  const removeParty = (i: number) => {
+    setParties(prev => prev.filter((_, idx) => idx !== i))
+  }
+
+  const updateParty = (i: number, ids: string[]) => {
+    setParties(prev => prev.map((p, idx) => idx === i ? ids : p))
+  }
+
+  const excludedFor = (index: number) =>
+    parties.flatMap((p, i) => i !== index ? p : [])
 
   const handleSubmit = async () => {
     if (!canSubmit || submitting) return
@@ -81,7 +105,7 @@ export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
     setSubmitting(true)
     setErrorMsg('')
     try {
-      await onSubmit({ difficulty, rank, score: parsed, party1, party2 })
+      await onSubmit({ difficulty, rank, score: parsed, parties: parties.filter(p => p.length > 0) })
       onClose()
     } catch (e: any) {
       setErrorMsg(e?.message ?? '제출 중 오류가 발생했습니다')
@@ -93,7 +117,7 @@ export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
   return (
     <>
       <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-        <div style={{ background: 'var(--bg-surface)', borderRadius: 14, width: '100%', maxWidth: 420, padding: 24, position: 'relative' }}>
+        <div style={{ background: 'var(--bg-surface)', borderRadius: 14, width: '100%', maxWidth: 440, maxHeight: '90vh', overflowY: 'auto', padding: 24, position: 'relative' }}>
           <button onClick={onClose} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
             <X size={18} />
           </button>
@@ -101,7 +125,6 @@ export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
           <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 2 }}>기록 제출</div>
           <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 20 }}>{boss.nameKo}</div>
 
-          {/* 난이도 */}
           <div style={{ marginBottom: 16 }}>
             <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>난이도</div>
             <div style={{ display: 'flex', gap: 6 }}>
@@ -111,7 +134,6 @@ export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
             </div>
           </div>
 
-          {/* 랭크 */}
           <div style={{ marginBottom: 16 }}>
             <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>랭크</div>
             <div style={{ display: 'flex', gap: 6 }}>
@@ -121,8 +143,7 @@ export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
             </div>
           </div>
 
-          {/* 점수 */}
-          <div style={{ marginBottom: 16 }}>
+          <div style={{ marginBottom: 20 }}>
             <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>점수</div>
             <input
               type="text"
@@ -133,20 +154,36 @@ export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
             />
           </div>
 
-          {/* 1파티 */}
           <div style={{ marginBottom: 14 }}>
-            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>
-              1파티 <span style={{ color: 'var(--text-muted)' }}>({party1.length}/4)</span>
+            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 10 }}>
+              파티 구성 <span style={{ color: 'var(--text-muted)' }}>(1파티 필수 · 최대 {MAX_PARTIES}파티)</span>
             </div>
-            <PartySlots party={party1} onEdit={() => setPicker(1)} />
-          </div>
-
-          {/* 2파티 */}
-          <div style={{ marginBottom: 22 }}>
-            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>
-              2파티 <span style={{ color: 'var(--text-muted)' }}>({party2.length}/4 · 선택)</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+              {parties.map((party, i) => (
+                <PartyRow
+                  key={i}
+                  index={i}
+                  party={party}
+                  onEdit={() => setPickerIndex(i)}
+                  onRemove={() => removeParty(i)}
+                  canRemove={parties.length > 1}
+                />
+              ))}
             </div>
-            <PartySlots party={party2} onEdit={() => setPicker(2)} />
+            {parties.length < MAX_PARTIES && (
+              <button
+                onClick={addParty}
+                style={{
+                  marginTop: 8, width: '100%', padding: '8px', borderRadius: 8,
+                  border: '1.5px dashed var(--border)', background: 'transparent',
+                  color: 'var(--text-muted)', fontSize: 12, cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+                }}
+              >
+                <Plus size={13} />
+                파티 추가
+              </button>
+            )}
           </div>
 
           {errorMsg && (
@@ -170,14 +207,14 @@ export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
         </div>
       </div>
 
-      {picker !== null && (
+      {pickerIndex !== null && (
         <CharacterPicker
-          title={`${picker}파티 선택`}
-          selected={picker === 1 ? party1 : party2}
-          excluded={picker === 1 ? party2 : party1}
+          title={`${pickerIndex + 1}파티 선택`}
+          selected={parties[pickerIndex] ?? []}
+          excluded={excludedFor(pickerIndex)}
           maxCount={4}
-          onConfirm={ids => { picker === 1 ? setParty1(ids) : setParty2(ids); setPicker(null) }}
-          onClose={() => setPicker(null)}
+          onConfirm={ids => { updateParty(pickerIndex, ids); setPickerIndex(null) }}
+          onClose={() => setPickerIndex(null)}
         />
       )}
     </>

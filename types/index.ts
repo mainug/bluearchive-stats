@@ -33,8 +33,7 @@ export interface Submission {
   difficulty: Difficulty
   rank: ClearRank
   score: number
-  party1: string[]
-  party2: string[]
+  parties: string[][]
   season: number
   createdAt: string
 }

@@ -40,8 +40,7 @@ export default function TotalAssaultPage() {
         difficulty: row.difficulty,
         rank: row.rank,
         score: row.score,
-        party1: row.party1 ?? [],
-        party2: row.party2 ?? [],
+        parties: row.parties ?? [],
         season: row.season,
         createdAt: row.created_at,
       })))
@@ -65,7 +64,7 @@ export default function TotalAssaultPage() {
     if (filtered.length === 0) return []
     const counts: Record<string, number> = {}
     filtered.forEach(s => {
-      ;[...s.party1, ...s.party2].forEach(id => {
+      s.parties.flat().forEach(id => {
         counts[id] = (counts[id] ?? 0) + 1
       })
     })
@@ -94,16 +93,14 @@ export default function TotalAssaultPage() {
     difficulty: Difficulty
     rank: ClearRank
     score: number
-    party1: string[]
-    party2: string[]
+    parties: string[][]
   }) => {
     const { error } = await supabase.from('submissions').insert({
       boss_id: selectedBossId,
       difficulty: data.difficulty,
       rank: data.rank,
       score: data.score,
-      party1: data.party1,
-      party2: data.party2,
+      parties: data.parties,
       season: CURRENT_SEASON,
     })
 
