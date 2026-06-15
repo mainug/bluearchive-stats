@@ -15,7 +15,7 @@ interface Props {
     score: number
     party1: string[]
     party2: string[]
-  }) => void
+  }) => Promise<void>
 }
 
 const RANKS: ClearRank[] = ['SS', 'S', 'A', 'B', 'C']
@@ -26,6 +26,8 @@ export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
   const [score, setScore] = useState('')
   const [party1, setParty1] = useState<string[]>([])
   const [party2, setParty2] = useState<string[]>([])
+  const [submitting, setSubmitting] = useState(false)
+  const [errorMsg, setErrorMsg] = useState('')
 
   const toggleStudent = (id: string, party: 1 | 2) => {
     const setter = party === 1 ? setParty1 : setParty2
@@ -39,10 +41,23 @@ export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
 
   const canSubmit = party1.length >= 1 && score.trim() !== ''
 
-  const handleSubmit = () => {
-    if (!canSubmit) return
-    onSubmit({ difficulty, rank, score: parseInt(score.replace(/,/g, '')), party1, party2 })
-    onClose()
+  const handleSubmit = async () => {
+    if (!canSubmit || submitting) return
+    const parsed = parseInt(score.replace(/,/g, ''), 10)
+    if (isNaN(parsed) || parsed <= 0) {
+      setErrorMsg('점수를 올바르게 입력해주세요')
+      return
+    }
+    setSubmitting(true)
+    setErrorMsg('')
+    try {
+      await onSubmit({ difficulty, rank, score: parsed, party1, party2 })
+      onClose()
+    } catch (e: any) {
+      setErrorMsg(e?.message ?? '제출 중 오류가 발생했습니다')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const SelectBtn = ({ value, current, onClick, children }: { value: string; current: string; onClick: () => void; children: React.ReactNode }) => (
@@ -155,17 +170,22 @@ export default function SubmitModal({ boss, onClose, onSubmit }: Props) {
           </div>
         </div>
 
+        {errorMsg && (
+          <div style={{ marginBottom: 12, padding: '8px 12px', borderRadius: 7, background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', fontSize: 12, color: '#f87171' }}>
+            {errorMsg}
+          </div>
+        )}
         <button
           onClick={handleSubmit}
-          disabled={!canSubmit}
+          disabled={!canSubmit || submitting}
           style={{
             width: '100%', padding: '11px', borderRadius: 9, border: 'none',
-            background: canSubmit ? 'var(--accent)' : 'var(--bg-surface-2)',
-            color: canSubmit ? '#fff' : 'var(--text-muted)',
-            fontSize: 14, fontWeight: 600, cursor: canSubmit ? 'pointer' : 'not-allowed',
+            background: canSubmit && !submitting ? 'var(--accent)' : 'var(--bg-surface-2)',
+            color: canSubmit && !submitting ? '#fff' : 'var(--text-muted)',
+            fontSize: 14, fontWeight: 600, cursor: canSubmit && !submitting ? 'pointer' : 'not-allowed',
           }}
         >
-          제출하기
+          {submitting ? '제출 중...' : '제출하기'}
         </button>
       </div>
     </div>
