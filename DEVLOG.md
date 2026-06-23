@@ -74,6 +74,19 @@
 
 ---
 
+### 전체 텍스트 가독성 개선 (폰트·색상·굵기)
+**문제**: 다크 테마 텍스트가 회색빛으로 가독성 낮음. 라이트 테마 텍스트도 뿌옇게 보임.  
+**해결**:
+- Pretendard Variable 폰트 적용 (CDN dynamic-subset) — 한국어 소자 선명도 향상
+- 전체 컴포넌트 font-size +4px 일괄 증가 (9개 파일 75건)
+- 다크 테마: `--text-secondary` `#9EC4E0`, `--text-muted` `#6A9AB8`로 밝게
+- 라이트 테마: 파란 기운 제거 → `--text-primary #0D0D0D`, `--text-secondary #222222`, `--text-muted #555555`
+- `body`에 `-webkit-font-smoothing: antialiased` 추가
+- 라이트 테마 `font-weight: 600`, 다크 테마 `font-weight: 400`으로 분리  
+**파일**: `app/globals.css`, `app/layout.tsx`, 컴포넌트 전체
+
+---
+
 ### CharacterPicker 스크롤바로 인한 카드 크기 변동
 **문제**: 캐릭터가 많을 때 스크롤바가 생기면서 그리드 컨테이너 너비가 줄어들고, 카드가 왼쪽으로 밀려 필터링 전후 카드 크기가 달라 보임.  
 **해결**: 그리드 스크롤 컨테이너에 `scrollbar-gutter: stable` 추가. 스크롤바 유무와 관계없이 항상 동일한 너비를 유지.  
