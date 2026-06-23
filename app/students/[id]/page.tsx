@@ -87,6 +87,11 @@ function StudentDetailContent() {
     fetchData()
   }, [server])
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
+
   const serverSeasonNums = useMemo(() => new Set(seasons.map(s => s.season)), [seasons])
 
   const studentSubmissions = useMemo(() =>
@@ -173,7 +178,7 @@ function StudentDetailContent() {
 
 
   return (
-    <div style={{ display: 'flex', height: `calc(100vh - ${NAVBAR_H}px)` }}>
+    <div style={{ display: 'flex', height: `calc(100vh - ${NAVBAR_H}px)`, overflow: 'hidden' }}>
 
       {/* ── 왼쪽: 캐릭터 일러스트 패널 ── */}
       <div style={{
