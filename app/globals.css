@@ -8,8 +8,8 @@
   --border: #D0E6F7;
   --border-strong: #B3D9EF;
   --text-primary: #1E3A5F;
-  --text-secondary: #2A5A80;
-  --text-muted: #4A7A9A;
+  --text-secondary: #1A3A5A;
+  --text-muted: #2A5A7A;
   --accent: #4AABDE;
   --accent-hover: #3898CC;
   --accent-text: #2A93C9;
@@ -23,8 +23,8 @@
   --border: #1E3450;
   --border-strong: #1E3F60;
   --text-primary: #E8F4FC;
-  --text-secondary: #9EC4E0;
-  --text-muted: #6A9AB8;
+  --text-secondary: #C8E0F2;
+  --text-muted: #9EC4E0;
   --accent: #4AABDE;
   --accent-hover: #62B8E4;
   --accent-text: #4AABDE;
@@ -37,6 +37,6 @@
 body {
   background: var(--bg-page);
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+  font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   transition: background 0.2s, color 0.2s;
 }
