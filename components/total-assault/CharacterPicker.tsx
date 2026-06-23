@@ -30,6 +30,7 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
 
   const filtered = useMemo(() => {
     return STUDENTS.filter(s => {
+      if (!s.released) return false
       if (excluded.includes(s.id)) return false
       if (roleFilter && s.role !== roleFilter) return false
       if (school !== '전체' && s.school !== school) return false
