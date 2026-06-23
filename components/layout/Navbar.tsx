@@ -19,9 +19,6 @@ export default function Navbar() {
     <header style={{ background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', height: 52, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 30, height: 30, background: 'var(--accent)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ color: '#fff', fontSize: 16, fontWeight: 600 }}>BA</span>
-          </div>
           <div>
             <div style={{ fontSize: 19, fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.2 }}>BlueStats</div>
             <div style={{ fontSize: 14, color: 'var(--accent)', fontWeight: 500 }}>블루 아카이브 통계</div>

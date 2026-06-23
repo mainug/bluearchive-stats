@@ -34,6 +34,13 @@
   box-sizing: border-box;
 }
 
+.hover-surface {
+  transition: background 0.15s;
+}
+.hover-surface:hover {
+  background: var(--bg-surface-2) !important;
+}
+
 body {
   background: var(--bg-page);
   color: var(--text-primary);

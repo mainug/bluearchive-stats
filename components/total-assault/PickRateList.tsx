@@ -35,7 +35,7 @@ export default function PickRateList({ picks }: Props) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.12 + i * 0.04, duration: 0.25, ease: 'easeOut' }}
           onClick={() => router.push(`/students/${pick.student.id}?server=${server}`)}
-          whileHover={{ background: 'var(--bg-surface-2)' } as any}
+          className="hover-surface"
           style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 6px', borderBottom: i < picks.length - 1 ? '1px solid var(--bg-surface-2)' : 'none', cursor: 'pointer', borderRadius: 6, margin: '0 -6px' }}
         >
           <span style={{ fontSize: 15, color: 'var(--text-muted)', width: 18, textAlign: 'center', flexShrink: 0 }}>{i + 1}</span>
