@@ -63,7 +63,7 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-      <div style={{ background: 'var(--bg-surface)', borderRadius: 14, width: '100%', maxWidth: 720, maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ background: 'var(--bg-surface)', borderRadius: 14, width: '100%', maxWidth: 720, height: '90vh', display: 'flex', flexDirection: 'column' }}>
 
         {/* 헤더 */}
         <div style={{ padding: '20px 28px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
@@ -146,8 +146,8 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
         </div>
 
         {/* 학생 그리드 */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 28px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: 10 }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 28px', scrollbarGutter: 'stable' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 100px)', justifyContent: 'space-between', gap: 10 }}>
             {filtered.map(student => {
               const isSelected = selected.includes(student.id)
               const isFull = !isSelected && selected.length >= maxCount
