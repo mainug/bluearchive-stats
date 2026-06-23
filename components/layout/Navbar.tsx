@@ -20,11 +20,11 @@ export default function Navbar() {
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', height: 52, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 30, height: 30, background: 'var(--accent)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ color: '#fff', fontSize: 12, fontWeight: 600 }}>BA</span>
+            <span style={{ color: '#fff', fontSize: 14, fontWeight: 600 }}>BA</span>
           </div>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.2 }}>BlueStats</div>
-            <div style={{ fontSize: 10, color: 'var(--accent)', fontWeight: 500 }}>블루 아카이브 통계</div>
+            <div style={{ fontSize: 17, fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.2 }}>BlueStats</div>
+            <div style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 500 }}>블루 아카이브 통계</div>
           </div>
         </div>
 
@@ -38,7 +38,7 @@ export default function Navbar() {
                 style={{
                   padding: '6px 14px',
                   borderRadius: 6,
-                  fontSize: 13,
+                  fontSize: 15,
                   fontWeight: active ? 500 : 400,
                   color: active ? 'var(--accent)' : 'var(--text-secondary)',
                   background: active ? 'var(--bg-accent)' : 'transparent',

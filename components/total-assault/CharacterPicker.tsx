@@ -68,8 +68,8 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
         {/* 헤더 */}
         <div style={{ padding: '20px 28px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <div>
-            <div style={{ fontSize: 18, fontWeight: 600, color: 'var(--text-primary)' }}>{title}</div>
-            <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 3 }}>
+            <div style={{ fontSize: 20, fontWeight: 600, color: 'var(--text-primary)' }}>{title}</div>
+            <div style={{ fontSize: 15, color: 'var(--text-muted)', marginTop: 3 }}>
               {roleFilter === 'striker' ? '스트라이커' : roleFilter === 'special' ? '스페셜' : ''} 최대 {maxCount}명 · {selected.length}명 선택됨
             </div>
           </div>
@@ -87,7 +87,7 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
               placeholder="학생 이름 검색"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              style={{ width: '100%', padding: '9px 12px 9px 36px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg-surface-2)', color: 'var(--text-primary)', fontSize: 14, outline: 'none' }}
+              style={{ width: '100%', padding: '9px 12px 9px 36px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg-surface-2)', color: 'var(--text-primary)', fontSize: 16, outline: 'none' }}
             />
           </div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
@@ -96,7 +96,7 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
                 key={s}
                 onClick={() => setSchool(s)}
                 style={{
-                  padding: '4px 11px', borderRadius: 5, fontSize: 12,
+                  padding: '4px 11px', borderRadius: 5, fontSize: 14,
                   border: `1px solid ${school === s ? 'var(--accent)' : 'var(--border)'}`,
                   background: school === s ? 'var(--bg-accent)' : 'var(--bg-surface-2)',
                   color: school === s ? 'var(--accent)' : 'var(--text-secondary)',
@@ -108,13 +108,13 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
             ))}
           </div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center', marginTop: 8 }}>
-            <span style={{ fontSize: 11, color: 'var(--text-muted)', width: 28, flexShrink: 0 }}>공격</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)', width: 28, flexShrink: 0 }}>공격</span>
             {ATTACK_TYPES.map(t => (
               <button
                 key={t}
                 onClick={() => setAttackType(t)}
                 style={{
-                  padding: '4px 11px', borderRadius: 5, fontSize: 12,
+                  padding: '4px 11px', borderRadius: 5, fontSize: 14,
                   border: `1px solid ${attackType === t ? 'var(--accent)' : 'var(--border)'}`,
                   background: attackType === t ? 'var(--bg-accent)' : 'var(--bg-surface-2)',
                   color: attackType === t ? 'var(--accent)' : 'var(--text-secondary)',
@@ -126,13 +126,13 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
             ))}
           </div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center', marginTop: 6 }}>
-            <span style={{ fontSize: 11, color: 'var(--text-muted)', width: 28, flexShrink: 0 }}>방어</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)', width: 28, flexShrink: 0 }}>방어</span>
             {ARMOR_TYPES.map(t => (
               <button
                 key={t}
                 onClick={() => setArmorType(t)}
                 style={{
-                  padding: '4px 11px', borderRadius: 5, fontSize: 12,
+                  padding: '4px 11px', borderRadius: 5, fontSize: 14,
                   border: `1px solid ${armorType === t ? 'var(--accent)' : 'var(--border)'}`,
                   background: armorType === t ? 'var(--bg-accent)' : 'var(--bg-surface-2)',
                   color: armorType === t ? 'var(--accent)' : 'var(--text-secondary)',
@@ -174,7 +174,7 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
                     </div>
                   )}
                   <StudentAvatar student={student} size={62} radius={12} fontSize={13} />
-                  <div style={{ fontSize: 11, color: isSelected ? 'var(--accent)' : 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.3, width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontSize: 13, color: isSelected ? 'var(--accent)' : 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.3, width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {student.nameKo}
                   </div>
                 </button>
@@ -182,7 +182,7 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
             })}
           </div>
           {filtered.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)', fontSize: 14 }}>검색 결과가 없어요</div>
+            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)', fontSize: 16 }}>검색 결과가 없어요</div>
           )}
         </div>
 
@@ -201,7 +201,7 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
           </div>
           <button
             onClick={() => onConfirm(selected)}
-            style={{ padding: '11px 28px', borderRadius: 9, border: 'none', background: 'var(--accent)', color: '#fff', fontSize: 15, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}
+            style={{ padding: '11px 28px', borderRadius: 9, border: 'none', background: 'var(--accent)', color: '#fff', fontSize: 17, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}
           >
             확인
           </button>

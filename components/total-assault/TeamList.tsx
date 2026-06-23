@@ -16,23 +16,23 @@ function StudentIcon({ studentId }: { studentId: string }) {
 export default function TeamList({ submissions }: Props) {
   return (
     <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px' }}>
-      <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
+      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--accent)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
         최근 제출 팀 구성
       </div>
       {submissions.map((sub, i) => (
         <div key={sub.id} style={{ padding: '9px 0', borderBottom: i < submissions.length - 1 ? '1px solid var(--bg-surface-2)' : 'none' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
-            <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
+            <span style={{ fontSize: 15, fontWeight: 500, color: 'var(--text-primary)' }}>
               {sub.score.toLocaleString()}점
             </span>
-            <span style={{ fontSize: 11, color: 'var(--text-secondary)', marginLeft: 'auto' }}>
+            <span style={{ fontSize: 13, color: 'var(--text-secondary)', marginLeft: 'auto' }}>
               {DIFFICULTY_LABEL[sub.difficulty]}
             </span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
             {sub.parties.map((party, pi) => (
               <div key={pi} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                <span style={{ fontSize: 10, color: 'var(--text-muted)', width: 28, flexShrink: 0 }}>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)', width: 28, flexShrink: 0 }}>
                   {pi + 1}P
                 </span>
                 <div style={{ display: 'flex', gap: 4 }}>

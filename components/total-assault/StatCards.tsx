@@ -21,10 +21,10 @@ export default function StatCards({ totalSubmissions, avgScore }: Props) {
             padding: '14px 16px',
           }}
         >
-          <div style={{ fontSize: 22, fontWeight: 600, color: card.accent ? 'var(--accent)' : 'var(--text-primary)' }}>
+          <div style={{ fontSize: 24, fontWeight: 600, color: card.accent ? 'var(--accent)' : 'var(--text-primary)' }}>
             {card.value}
           </div>
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 3 }}>{card.label}</div>
+          <div style={{ fontSize: 14, color: 'var(--text-secondary)', marginTop: 3 }}>{card.label}</div>
         </div>
       ))}
     </div>

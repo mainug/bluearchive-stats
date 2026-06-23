@@ -27,7 +27,7 @@ type Party = { strikers: string[]; specials: string[] }
 function SelectBtn({ value, current, onClick, children }: { value: string; current: string; onClick: () => void; children: React.ReactNode }) {
   return (
     <button onClick={onClick} style={{
-      padding: '5px 12px', borderRadius: 6, fontSize: 12,
+      padding: '7px 16px', borderRadius: 8, fontSize: 16,
       border: `1px solid ${value === current ? 'var(--accent)' : 'var(--border)'}`,
       background: value === current ? 'var(--bg-accent)' : 'var(--bg-surface-2)',
       color: value === current ? 'var(--accent)' : 'var(--text-secondary)',
@@ -38,11 +38,11 @@ function SelectBtn({ value, current, onClick, children }: { value: string; curre
   )
 }
 
-function Slot({ id, size = 34 }: { id?: string; size?: number }) {
+function Slot({ id, size = 44 }: { id?: string; size?: number }) {
   const s = id ? STUDENTS.find(x => x.id === id) : null
   return s
-    ? <StudentAvatar student={s} size={size} radius={8} fontSize={10} />
-    : <div style={{ width: size, height: size, borderRadius: 8, border: '1.5px dashed var(--border)' }} />
+    ? <StudentAvatar student={s} size={size} radius={10} fontSize={12} />
+    : <div style={{ width: size, height: size, borderRadius: 10, border: '1.5px dashed var(--border)' }} />
 }
 
 function PartyRow({
@@ -56,44 +56,44 @@ function PartyRow({
   canRemove: boolean
 }) {
   return (
-    <div style={{ background: 'var(--bg-surface-2)', borderRadius: 9, padding: '10px 12px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-        <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', width: 38, flexShrink: 0 }}>{index + 1}파티</span>
+    <div style={{ background: 'var(--bg-surface-2)', borderRadius: 10, padding: '12px 16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+        <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-muted)', width: 44, flexShrink: 0 }}>{index + 1}파티</span>
         {canRemove && (
           <button onClick={onRemove} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 2, marginLeft: 'auto' }}>
-            <Trash2 size={13} />
+            <Trash2 size={15} />
           </button>
         )}
       </div>
-      <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
         {/* 스트라이커 */}
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 4 }}>스트라이커</div>
-          <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 6 }}>스트라이커</div>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
             {Array.from({ length: 4 }).map((_, i) => <Slot key={i} id={party.strikers[i]} />)}
             <button onClick={onEditStrikers} style={{
-              padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border)',
-              background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontSize: 10,
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 3, flexShrink: 0, marginLeft: 2,
+              padding: '5px 10px', borderRadius: 7, border: '1px solid var(--border)',
+              background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontSize: 14,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, marginLeft: 4,
             }}>
-              <Users size={10} />
+              <Users size={12} />
               {party.strikers.length > 0 ? '수정' : '선택'}
             </button>
           </div>
         </div>
         {/* 구분선 */}
-        <div style={{ width: 1, height: 50, background: 'var(--border)', flexShrink: 0 }} />
+        <div style={{ width: 1, height: 60, background: 'var(--border)', flexShrink: 0 }} />
         {/* 스페셜 */}
         <div>
-          <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 4 }}>스페셜</div>
-          <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 6 }}>스페셜</div>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
             {Array.from({ length: 2 }).map((_, i) => <Slot key={i} id={party.specials[i]} />)}
             <button onClick={onEditSpecials} style={{
-              padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border)',
-              background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontSize: 10,
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 3, flexShrink: 0, marginLeft: 2,
+              padding: '5px 10px', borderRadius: 7, border: '1px solid var(--border)',
+              background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontSize: 14,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, marginLeft: 4,
             }}>
-              <Users size={10} />
+              <Users size={12} />
               {party.specials.length > 0 ? '수정' : '선택'}
             </button>
           </div>
@@ -154,16 +154,16 @@ export default function SubmitModal({ boss, availableDifficulties, server, onClo
   return (
     <>
       <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-        <div style={{ background: 'var(--bg-surface)', borderRadius: 14, width: '100%', maxWidth: 440, maxHeight: '90vh', overflowY: 'auto', padding: 24, position: 'relative' }}>
+        <div style={{ background: 'var(--bg-surface)', borderRadius: 14, width: '100%', maxWidth: 560, maxHeight: '95vh', overflowY: 'auto', padding: 40, position: 'relative' }}>
           <button onClick={onClose} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
             <X size={18} />
           </button>
 
-          <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 2 }}>기록 제출</div>
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 20 }}>{boss.nameKo}</div>
+          <div style={{ fontSize: 22, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 4 }}>기록 제출</div>
+          <div style={{ fontSize: 16, color: 'var(--text-secondary)', marginBottom: 24 }}>{boss.nameKo}</div>
 
-          <div style={{ marginBottom: 16 }}>
-            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>난이도</div>
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 15, color: 'var(--text-secondary)', marginBottom: 10 }}>난이도</div>
             <div style={{ display: 'flex', gap: 6 }}>
               {availableDifficulties.map(d => (
                 <SelectBtn key={d} value={d} current={difficulty} onClick={() => setDifficulty(d)}>{DIFFICULTY_LABEL[d]}</SelectBtn>
@@ -171,22 +171,22 @@ export default function SubmitModal({ boss, availableDifficulties, server, onClo
             </div>
           </div>
 
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>점수</div>
+          <div style={{ marginBottom: 24 }}>
+            <div style={{ fontSize: 15, color: 'var(--text-secondary)', marginBottom: 10 }}>점수</div>
             <input
               type="text"
               placeholder="예: 5420000"
               value={score}
               onChange={e => setScore(e.target.value)}
-              style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg-surface-2)', color: 'var(--text-primary)', fontSize: 13, outline: 'none' }}
+              style={{ width: '100%', padding: '10px 14px', borderRadius: 9, border: '1px solid var(--border)', background: 'var(--bg-surface-2)', color: 'var(--text-primary)', fontSize: 17, outline: 'none' }}
             />
           </div>
 
-          <div style={{ marginBottom: 14 }}>
-            <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 10 }}>
+          <div style={{ marginBottom: 18 }}>
+            <div style={{ fontSize: 15, color: 'var(--text-secondary)', marginBottom: 12 }}>
               파티 구성 <span style={{ color: 'var(--text-muted)' }}>(1파티 필수 · 최대 {MAX_PARTIES}파티)</span>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
               {parties.map((party, i) => (
                 <PartyRow
                   key={i}
@@ -203,20 +203,20 @@ export default function SubmitModal({ boss, availableDifficulties, server, onClo
               <button
                 onClick={addParty}
                 style={{
-                  marginTop: 8, width: '100%', padding: '8px', borderRadius: 8,
+                  marginTop: 10, width: '100%', padding: '10px', borderRadius: 9,
                   border: '1.5px dashed var(--border)', background: 'transparent',
-                  color: 'var(--text-muted)', fontSize: 12, cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+                  color: 'var(--text-muted)', fontSize: 15, cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                 }}
               >
-                <Plus size={13} />
+                <Plus size={15} />
                 파티 추가
               </button>
             )}
           </div>
 
           {errorMsg && (
-            <div style={{ marginBottom: 12, padding: '8px 12px', borderRadius: 7, background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', fontSize: 12, color: '#f87171' }}>
+            <div style={{ marginBottom: 12, padding: '8px 12px', borderRadius: 7, background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', fontSize: 14, color: '#f87171' }}>
               {errorMsg}
             </div>
           )}
@@ -225,10 +225,10 @@ export default function SubmitModal({ boss, availableDifficulties, server, onClo
             onClick={handleSubmit}
             disabled={!canSubmit || submitting}
             style={{
-              width: '100%', padding: '11px', borderRadius: 9, border: 'none',
+              width: '100%', padding: '14px', borderRadius: 10, border: 'none',
               background: canSubmit && !submitting ? 'var(--accent)' : 'var(--bg-surface-2)',
               color: canSubmit && !submitting ? '#fff' : 'var(--text-muted)',
-              fontSize: 14, fontWeight: 600, cursor: canSubmit && !submitting ? 'pointer' : 'not-allowed',
+              fontSize: 18, fontWeight: 600, cursor: canSubmit && !submitting ? 'pointer' : 'not-allowed',
             }}
           >
             {submitting ? '제출 중...' : '제출하기'}

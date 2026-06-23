@@ -40,15 +40,15 @@ export default function TotalAssaultListPage() {
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', padding: '28px 20px' }}>
       <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>총력전</h1>
-        <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16 }}>시즌별 보스 및 유저 기록 통계</p>
+        <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>총력전</h1>
+        <p style={{ fontSize: 15, color: 'var(--text-secondary)', marginBottom: 16 }}>시즌별 보스 및 유저 기록 통계</p>
         <div style={{ display: 'flex', gap: 4 }}>
           {(['global', 'jp'] as const).map(s => (
             <button
               key={s}
               onClick={() => setServer(s)}
               style={{
-                padding: '6px 16px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+                padding: '6px 16px', borderRadius: 8, fontSize: 14, fontWeight: 600,
                 border: server === s ? 'none' : '1px solid var(--border)',
                 background: server === s ? 'var(--accent)' : 'var(--bg-surface)',
                 color: server === s ? '#fff' : 'var(--text-muted)',
@@ -62,11 +62,11 @@ export default function TotalAssaultListPage() {
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)', fontSize: 13 }}>
+        <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)', fontSize: 15 }}>
           불러오는 중...
         </div>
       ) : seasons.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)', fontSize: 13 }}>
+        <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)', fontSize: 15 }}>
           등록된 시즌이 없습니다
         </div>
       ) : (
@@ -98,25 +98,25 @@ export default function TotalAssaultListPage() {
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
                       총력전
                     </span>
                     {isCurrent && (
-                      <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3, background: 'var(--accent)', color: '#fff', letterSpacing: '0.03em' }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 6px', borderRadius: 3, background: 'var(--accent)', color: '#fff', letterSpacing: '0.03em' }}>
                         진행중
                       </span>
                     )}
                   </div>
-                  <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
                     {season.start_date ?? '—'}
                   </span>
                 </div>
 
                 <div style={{ marginBottom: 12 }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', marginBottom: 2 }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', marginBottom: 2 }}>
                     S{season.season}
                   </div>
-                  <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.2 }}>
+                  <div style={{ fontSize: 19, fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.2 }}>
                     {boss?.nameKo ?? '—'}
                   </div>
                 </div>
@@ -126,7 +126,7 @@ export default function TotalAssaultListPage() {
                     <TerrainBadge terrain={season.terrain} />
                   )}
                   {season.end_date && !season.is_current && (
-                    <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>
+                    <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                       ~ {season.end_date}
                     </span>
                   )}
@@ -150,7 +150,7 @@ function TerrainBadge({ terrain }: { terrain: string }) {
   const style = map[terrain]
   if (!style) return null
   return (
-    <span style={{ fontSize: 10, fontWeight: 600, padding: '2px 7px', borderRadius: 4, background: style.bg, color: style.color }}>
+    <span style={{ fontSize: 12, fontWeight: 600, padding: '2px 7px', borderRadius: 4, background: style.bg, color: style.color }}>
       {style.label}
     </span>
   )
