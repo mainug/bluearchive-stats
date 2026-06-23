@@ -28,6 +28,11 @@
 **버그**: `RawSubmission` 인터페이스에 `boss_id` 필드 누락으로 차트 데이터가 비어있던 문제 수정.  
 **파일**: `app/students/[id]/page.tsx`
 
+### 학생 상세 페이지 스크롤바 중복
+**문제**: 오른쪽 통계 패널(`overflowY: auto`)과 body 기본 스크롤이 동시에 활성화되어 스크롤바가 두 개 표시됨.  
+**해결**: 페이지 진입 시 `document.body.style.overflow = 'hidden'` 적용, 언마운트 시 원복. 외부 컨테이너에 `overflow: hidden`도 추가.  
+**파일**: `app/students/[id]/page.tsx`
+
 ---
 
 ## 2026-06-23
