@@ -1,7 +1,7 @@
 export type Terrain = 'indoor' | 'outdoor' | 'special' | 'urban'
 export type Difficulty = 'extreme' | 'insane' | 'torment' | 'lunatic'
 export type AttackType = 'explosive' | 'piercing' | 'mystic' | 'sonic'
-export type ArmorType = 'light' | 'heavy' | 'special' | 'elastic'
+export type ArmorType = 'light' | 'heavy' | 'special' | 'elastic' | 'composite'
 export type Role = 'striker' | 'special'
 export interface Boss {
   id: string

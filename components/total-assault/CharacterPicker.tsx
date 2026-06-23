@@ -6,11 +6,12 @@ import { Student } from '@/types'
 import { STUDENTS, getSchoolColor } from '@/data/students'
 import StudentAvatar from '@/components/ui/StudentAvatar'
 
-const SCHOOLS = ['전체', 'Gehenna', 'Trinity', 'Millennium', 'Abydos', 'Hyakkiyako', 'RedWinter', 'Shanhaijing', 'Arius', 'SRT', 'Valkyrie', 'Sakugawa', 'Tokiwadai', 'ETC']
+const SCHOOLS = ['전체', 'Gehenna', 'Trinity', 'Millennium', 'Abydos', 'Hyakkiyako', 'RedWinter', 'Shanhaijing', 'Arius', 'SRT', 'Valkyrie', 'WildHunt', 'Highlander', 'Sakugawa', 'Tokiwadai', 'ETC']
 const SCHOOL_KO: Record<string, string> = {
   Gehenna: '게헨나', Trinity: '트리니티', Millennium: '밀레니엄', Abydos: '아비도스',
   Hyakkiyako: '백귀야행', RedWinter: '레드윈터', Shanhaijing: '산해경', Arius: '아리우스',
-  SRT: 'SRT', Valkyrie: '발키리', Sakugawa: '사쿠가와', Tokiwadai: '토키와다이', ETC: '기타',
+  SRT: 'SRT', Valkyrie: '발키리', WildHunt: '와일드헌트', Highlander: '하이랜더',
+  Sakugawa: '사쿠가와', Tokiwadai: '토키와다이', ETC: '기타',
 }
 
 interface Props {
@@ -19,25 +20,26 @@ interface Props {
   excluded: string[]
   maxCount: number
   roleFilter?: 'striker' | 'special'
+  server?: 'global' | 'jp'
   onConfirm: (ids: string[]) => void
   onClose: () => void
 }
 
-export default function CharacterPicker({ title, selected: initialSelected, excluded, maxCount, roleFilter, onConfirm, onClose }: Props) {
+export default function CharacterPicker({ title, selected: initialSelected, excluded, maxCount, roleFilter, server, onConfirm, onClose }: Props) {
   const [query, setQuery] = useState('')
   const [school, setSchool] = useState('전체')
   const [selected, setSelected] = useState<string[]>(initialSelected)
 
   const filtered = useMemo(() => {
     return STUDENTS.filter(s => {
-      if (!s.released) return false
+      if (!s.released && server !== 'jp') return false
       if (excluded.includes(s.id)) return false
       if (roleFilter && s.role !== roleFilter) return false
       if (school !== '전체' && s.school !== school) return false
       if (query && !s.nameKo.includes(query) && !s.nameEn.toLowerCase().includes(query.toLowerCase())) return false
       return true
     })
-  }, [query, school, excluded, roleFilter])
+  }, [query, school, excluded, roleFilter, server])
 
   const toggle = (id: string) => {
     setSelected(prev =>

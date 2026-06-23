@@ -241,7 +241,7 @@ function SeasonDetailContent() {
       </div>
 
       {showModal && currentBoss && (
-        <SubmitModal boss={currentBoss} availableDifficulties={availableDifficulties} onClose={() => setShowModal(false)} onSubmit={handleSubmit} />
+        <SubmitModal boss={currentBoss} availableDifficulties={availableDifficulties} server={server as 'global' | 'jp'} onClose={() => setShowModal(false)} onSubmit={handleSubmit} />
       )}
     </>
   )

@@ -53,3 +53,21 @@
 **해결**: SchaleDB JSON(`IsReleased[1]=false`)과 schaleId 교차 검증 후 22명을 `released: false`로 수정.  
 미출시 22명: 카요코/아루(드레스), 아카리(새해), 우미카, 츠바키(가이드), 카즈사/요시미/아이리(밴드), 키라라, 모모이/미도리(메이드), 세리카/칸나/후부키/키리노/모에/아츠코/사오리/히요리(수영복), 호시노(무장), 시로코\*테러.  
 **참고 출처**: SchaleDB GitHub(`IsReleased` 필드), blue-utils.me(JP 전용 이탤릭 표시) 교차 확인.
+
+---
+
+### 학생 데이터 대규모 누락 및 전면 갱신
+**문제**: 데이터 소스로 사용하던 `lonqie/SchaleDB` GitHub JSON이 최신화되지 않아 194명만 있었음. 실제 schaledb.com 기준 264명.  
+누락 현황: Global 출시 57명 미포함, JP 선출시 13명 미포함.  
+또한 기존 released:false로 잘못 표시한 22명이 실제로는 모두 Global 출시 완료 상태였음.  
+**원인**: 데이터 소스를 GitHub raw JSON(`lonqie/SchaleDB`)으로 사용했는데, 이 레포가 schaledb.com보다 한참 뒤처져 있었음.  
+**해결**:
+- 데이터 소스를 `schaledb.com/data/en(kr)/students.min.json`으로 교체
+- 누락 70명(Global 57 + JP 선출시 13) 추가 → 총 264명
+- 기존 22명 released:false → released:true로 수정 → 최종 Global 251명 / JP 선출시 13명
+- 신규 학교 WildHunt, Highlander 추가 (SCHOOL_COLORS + CharacterPicker)
+- 신규 방어타입 composite 추가 (ArmorType)
+
+### JP 픽커 서버 인식 버그
+**문제**: CharacterPicker가 server prop을 받지 않아 JP 서버 제출 시에도 released:false 캐릭터(JP 선출시 13명)가 필터링됨.  
+**해결**: `server?: 'global' | 'jp'` prop을 `page.tsx → SubmitModal → CharacterPicker`로 전달. 필터 조건: `if (!s.released && server !== 'jp') return false`.

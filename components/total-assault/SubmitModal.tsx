@@ -11,6 +11,7 @@ import CharacterPicker from './CharacterPicker'
 interface Props {
   boss: Boss
   availableDifficulties: Difficulty[]
+  server?: 'global' | 'jp'
   onClose: () => void
   onSubmit: (data: {
     difficulty: Difficulty
@@ -104,7 +105,7 @@ function PartyRow({
 
 type PickerState = { partyIndex: number; role: 'striker' | 'special' } | null
 
-export default function SubmitModal({ boss, availableDifficulties, onClose, onSubmit }: Props) {
+export default function SubmitModal({ boss, availableDifficulties, server, onClose, onSubmit }: Props) {
   const [difficulty, setDifficulty] = useState<Difficulty>(
     availableDifficulties[0] ?? 'insane'
   )
@@ -245,6 +246,7 @@ export default function SubmitModal({ boss, availableDifficulties, onClose, onSu
             excluded={allSelected(partyIndex)}
             maxCount={role === 'striker' ? 4 : 2}
             roleFilter={role}
+            server={server}
             onConfirm={ids => { updatePartyRole(partyIndex, role, ids); setPickerState(null) }}
             onClose={() => setPickerState(null)}
           />
