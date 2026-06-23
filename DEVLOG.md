@@ -74,6 +74,13 @@
 
 ---
 
+### CharacterPicker 공격/방어 타입 필터 추가
+**문제**: 학원(school) 필터만 있어서 약점 속성이나 방어 타입 기준으로 캐릭터를 찾기 불편했음.  
+**해결**: 공격 타입(폭발/관통/신비/진동) · 방어 타입(경/중/특수/탄성/복합장갑) 필터 행 추가. 기존 학원 필터와 AND 조합으로 동작.  
+**파일**: `components/total-assault/CharacterPicker.tsx`
+
+---
+
 ### 학생 아이콘 이미지 미표시 (신규 캐릭터)
 **문제**: `StudentAvatar`가 `raw.githubusercontent.com/SchaleDB/SchaleDB` GitHub raw URL에서 이미지를 가져왔는데, JSON 데이터가 outdated였던 것처럼 이미지 레포도 새로 추가한 70명의 이미지가 없을 수 있음.  
 **해결**: 이미지 URL을 `schaledb.com/images/student/icon/{schaleId}.webp`로 교체. 데이터 소스와 동일한 최신 소스를 쓰므로 264명 전원 커버.  
