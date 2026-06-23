@@ -44,3 +44,12 @@
 **문제**: `released: false`인 학생도 파티 편성 픽커에서 선택 가능했음.  
 **해결**: `CharacterPicker`의 `filtered` 조건에 `if (!s.released) return false` 추가.  
 새 캐릭터 추가 시 `released: false`로 시작, 실제 출시 후 `true`로 업데이트하는 방식으로 관리.
+
+---
+
+### students.ts released 플래그 전원 true 오류
+**문제**: students.ts 194명 전원이 `released: true`로 표기돼 있었으나, SchaleDB의 `IsReleased[1]`(Global 기준) 확인 결과 22명이 실제로는 미출시 상태.  
+**원인**: 데이터 초기 입력 시 Global 출시 여부를 확인하지 않고 전원 true로 입력.  
+**해결**: SchaleDB JSON(`IsReleased[1]=false`)과 schaleId 교차 검증 후 22명을 `released: false`로 수정.  
+미출시 22명: 카요코/아루(드레스), 아카리(새해), 우미카, 츠바키(가이드), 카즈사/요시미/아이리(밴드), 키라라, 모모이/미도리(메이드), 세리카/칸나/후부키/키리노/모에/아츠코/사오리/히요리(수영복), 호시노(무장), 시로코\*테러.  
+**참고 출처**: SchaleDB GitHub(`IsReleased` 필드), blue-utils.me(JP 전용 이탤릭 표시) 교차 확인.
