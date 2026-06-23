@@ -107,6 +107,13 @@
 
 ---
 
+### 학생 상세 페이지 일러스트 레이아웃 개선
+**문제**: 스탠딩 일러스트를 `position: absolute` + `left` 수치로 위치 조정 시 캐릭터마다 일러스트 구도가 달라 통일되지 않음.  
+**해결**: 컨테이너를 패널 전체 크기(`top: 20, bottom: 64, left: 0, right: 0`)로 고정하고 이미지에 `objectFit: cover, objectPosition: center top` 적용. 모든 캐릭터가 상단 중앙 기준으로 패널을 꽉 채우도록 통일.  
+**파일**: `app/students/[id]/page.tsx`
+
+---
+
 ### 학생 개별 페이지 추가
 **기능**: 학생 ID 기반 상세 페이지(`/students/[id]`) 신규 추가.  
 **내용**:
