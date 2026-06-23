@@ -31,6 +31,7 @@ interface SeasonRow {
 interface RawSubmission {
   id: string
   season: number
+  boss_id: string
   difficulty: string
   score: number
   parties: string[][]
@@ -127,6 +128,34 @@ function StudentDetailContent() {
       .slice(0, 8) as CoPick[]
   }, [studentSubmissions, studentId])
 
+  const DIFF_LABEL: Record<string, string> = { lunatic: '루나틱', torment: '토먼트', insane: '인세인', extreme: '익스트림' }
+  const DIFF_COLOR: Record<string, string> = { lunatic: '#c084fc', torment: '#f87171', insane: '#60a5fa', extreme: '#4ade80' }
+
+  const difficultyStats = useMemo(() => {
+    const validKeys = new Set(seasons.map(s => `${s.season}|${s.boss_id}`))
+    return ['lunatic', 'torment', 'insane', 'extreme'].map(diff => {
+      const total = allSubmissions.filter(s => validKeys.has(`${s.season}|${s.boss_id}`) && s.difficulty === diff)
+      const appearances = total.filter(s => s.parties.some(p => p.includes(studentId)))
+      return { diff, total: total.length, appearances: appearances.length, pickRate: total.length > 0 ? appearances.length / total.length * 100 : 0 }
+    }).filter(d => d.total > 0)
+  }, [allSubmissions, seasons, studentId])
+
+  const bossStats = useMemo(() => {
+    const map = new Map<string, { total: number; appearances: number }>()
+    seasons.forEach(s => {
+      if (!s.boss_id) return
+      const subs = allSubmissions.filter(sub => sub.season === s.season && sub.boss_id === s.boss_id)
+      const app = subs.filter(sub => sub.parties.some(p => p.includes(studentId)))
+      const prev = map.get(s.boss_id) ?? { total: 0, appearances: 0 }
+      map.set(s.boss_id, { total: prev.total + subs.length, appearances: prev.appearances + app.length })
+    })
+    return Array.from(map.entries())
+      .map(([bossId, d]) => ({ bossId, nameKo: BOSSES.find(b => b.id === bossId)?.nameKo ?? bossId, ...d, pickRate: d.total > 0 ? d.appearances / d.total * 100 : 0 }))
+      .filter(b => b.appearances > 0)
+      .sort((a, b) => b.pickRate - a.pickRate)
+      .slice(0, 7)
+  }, [allSubmissions, seasons, studentId])
+
   const totalAppearances = studentSubmissions.length
   const activeSeasonsCount = seasonStats.filter(s => s.appearances > 0).length
   const bestPickRate = seasonStats.length > 0 ? Math.max(...seasonStats.map(s => s.pickRate)) : 0
@@ -142,12 +171,13 @@ function StudentDetailContent() {
   const schoolColor = getSchoolColor(student.school)
   const portraitUrl = `https://schaledb.com/images/student/portrait/${student.schaleId}.webp`
 
+
   return (
     <div style={{ display: 'flex', height: `calc(100vh - ${NAVBAR_H}px)` }}>
 
       {/* ── 왼쪽: 캐릭터 일러스트 패널 ── */}
       <div style={{
-        width: 420,
+        width: 550,
         flexShrink: 0,
         position: 'relative',
         overflow: 'hidden',
@@ -170,23 +200,27 @@ function StudentDetailContent() {
           뒤로가기
         </button>
 
-        {/* 스탠딩 일러스트 — 가로는 패널 꽉 채워 좌우 공백 제거, 세로만 살짝 여백으로 축소 느낌 */}
-        <div style={{ position: 'absolute', top: 20, bottom: 64, left: 0, right: 0 }}>
-          <motion.img
-            src={portraitUrl}
-            alt={student.nameKo}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center top',
-              filter: 'drop-shadow(0 8px 24px rgba(0,0,0,0.3))',
-            }}
-          />
-        </div>
+        {/* 스탠딩 일러스트 — SchaleDB 방식: background contain + scale 확대 */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          style={{
+            position: 'absolute', top: 0, bottom: 0, left: 0, right: 0,
+            backgroundImage: `url(${portraitUrl})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center top',
+            backgroundSize: 'cover',
+            filter: 'drop-shadow(0 8px 24px rgba(0,0,0,0.3))',
+          }}
+        />
+
+        {/* 오른쪽 경계 페이드 */}
+        <div style={{
+          position: 'absolute', top: 0, bottom: 0, right: 0, width: 80,
+          background: 'linear-gradient(to right, transparent, var(--bg-page))',
+          pointerEvents: 'none', zIndex: 1,
+        }} />
 
         {/* 하단 이름 오버레이 */}
         <div style={{
@@ -259,13 +293,68 @@ function StudentDetailContent() {
             ))}
           </div>
 
+          {/* 차트 행 */}
+          <div style={{ display: 'flex', gap: 14 }}>
+            {/* 난이도별 픽률 */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.25, ease: 'easeOut' }}
+              style={{ flex: 1, background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px' }}
+            >
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 14 }}>난이도별 픽률</div>
+              {loading ? <div style={{ color: 'var(--text-muted)', fontSize: 14, padding: '12px 0' }}>불러오는 중...</div> :
+                difficultyStats.length === 0 ? <div style={{ color: 'var(--text-muted)', fontSize: 14, padding: '12px 0' }}>데이터 없음</div> :
+                difficultyStats.map((d, i) => (
+                  <div key={d.diff} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: i < difficultyStats.length - 1 ? 10 : 0 }}>
+                    <span style={{ width: 52, fontSize: 13, color: 'var(--text-secondary)', flexShrink: 0, textAlign: 'right' }}>{DIFF_LABEL[d.diff]}</span>
+                    <div style={{ flex: 1, height: 18, background: 'var(--bg-surface-2)', borderRadius: 4, overflow: 'hidden' }}>
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${d.pickRate}%` }}
+                        transition={{ delay: 0.2 + i * 0.06, duration: 0.5, ease: 'easeOut' }}
+                        style={{ height: '100%', background: DIFF_COLOR[d.diff], borderRadius: 4 }}
+                      />
+                    </div>
+                    <span style={{ width: 42, fontSize: 13, fontWeight: 600, color: DIFF_COLOR[d.diff], textAlign: 'right', flexShrink: 0 }}>{d.pickRate.toFixed(1)}%</span>
+                  </div>
+                ))
+              }
+            </motion.div>
+
+            {/* 보스별 픽률 */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.25, ease: 'easeOut' }}
+              style={{ flex: 1, background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px' }}
+            >
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 14 }}>보스별 픽률</div>
+              {loading ? <div style={{ color: 'var(--text-muted)', fontSize: 14, padding: '12px 0' }}>불러오는 중...</div> :
+                bossStats.length === 0 ? <div style={{ color: 'var(--text-muted)', fontSize: 14, padding: '12px 0' }}>데이터 없음</div> :
+                bossStats.map((b, i) => (
+                  <div key={b.bossId} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: i < bossStats.length - 1 ? 10 : 0 }}>
+                    <span style={{ width: 64, fontSize: 13, color: 'var(--text-secondary)', flexShrink: 0, textAlign: 'right', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{b.nameKo}</span>
+                    <div style={{ flex: 1, height: 18, background: 'var(--bg-surface-2)', borderRadius: 4, overflow: 'hidden' }}>
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(b.pickRate / bossStats[0].pickRate) * 100}%` }}
+                        transition={{ delay: 0.2 + i * 0.06, duration: 0.5, ease: 'easeOut' }}
+                        style={{ height: '100%', background: 'var(--accent)', borderRadius: 4, opacity: 0.85 + 0.15 * (1 - i / bossStats.length) }}
+                      />
+                    </div>
+                    <span style={{ width: 42, fontSize: 13, fontWeight: 600, color: 'var(--accent-text)', textAlign: 'right', flexShrink: 0 }}>{b.pickRate.toFixed(1)}%</span>
+                  </div>
+                ))
+              }
+            </motion.div>
+          </div>
+
           <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
             {/* 시즌 픽률 테이블 */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15, duration: 0.25, ease: 'easeOut' }}
-              style={{ flex: 1, background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px', minWidth: 0 }}
+              style={{ flex: 1, minWidth: 0, background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px' }}
             >
               <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
                 시즌별 픽률
@@ -284,16 +373,16 @@ function StudentDetailContent() {
                     </tr>
                   </thead>
                   <tbody>
-                    {seasonStats.map((row, i) => {
+                    {seasonStats.filter(s => s.appearances > 0).map((row, i, arr) => {
                       const boss = BOSSES.find(b => b.id === row.bossId)
-                      const maxRate = Math.max(...seasonStats.map(s => s.pickRate))
+                      const maxRate = Math.max(...arr.map(s => s.pickRate))
                       return (
                         <motion.tr
                           key={row.season}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.18 + i * 0.025 }}
-                          style={{ borderBottom: i < seasonStats.length - 1 ? '1px solid var(--bg-surface-2)' : 'none' }}
+                          style={{ borderBottom: i < arr.length - 1 ? '1px solid var(--bg-surface-2)' : 'none' }}
                         >
                           <td style={{ padding: '8px 10px', color: 'var(--text-primary)', fontWeight: 500 }}>S{row.season}</td>
                           <td style={{ padding: '8px 10px', color: 'var(--text-secondary)' }}>{boss?.nameKo ?? '—'}</td>
@@ -327,7 +416,7 @@ function StudentDetailContent() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.25, ease: 'easeOut' }}
-              style={{ width: 220, flexShrink: 0, background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px' }}
+              style={{ width: 240, flexShrink: 0, background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px' }}
             >
               <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
                 자주 함께한 학생

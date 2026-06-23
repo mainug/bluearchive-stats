@@ -2,6 +2,34 @@
 
 ---
 
+## 2026-06-23 (2)
+
+### 학생 상세 페이지 개선
+
+#### 시드 데이터 삽입
+**내용**: bluearchive-torment 사이트 데이터를 직접 가져오기 어려워(수동 스크래핑 기반) 보스 약점별 캐릭터 풀을 구성해 랜덤 시드 데이터 448건 삽입. Global 7시즌, JP 11시즌 커버.  
+**파일**: `scripts/seed-submissions.js`
+
+#### lunatic 난이도 DB 제약 추가
+**문제**: `submissions_difficulty_check` 제약에 'lunatic'이 없어서 삽입 불가.  
+**해결**: Supabase 대시보드에서 constraint 재생성 후 시드 스크립트에 lunatic(35M~60M점) 추가해 재시드.
+
+#### 스탠딩 일러스트 background-image 방식 전환
+**문제**: SchaleDB portrait 이미지 캔버스 비율이 캐릭터마다 달라(세로형 ~532×1024, 가로형 히나 ~1400×927) `objectFit` 단일 값으로 통일 불가.  
+**해결**: SchaleDB 방식 참고 — `<img>` 대신 `background-image: url() no-repeat center top / cover`로 전환. cover로 통일해 히나 날개 일부 크롭되지만 캐릭터 본체 항상 표시. 패널 너비 550px로 확대.
+
+#### 일러스트 패널 오른쪽 경계 페이드
+**해결**: 패널 오른쪽 가장자리에 `linear-gradient(to right, transparent, var(--bg-page))` 80px 오버레이 추가. 일러스트와 통계 영역 경계가 자연스럽게 전환됨.
+
+#### 학생 상세 페이지 차트 추가
+**내용**: 시즌별 픽률 테이블 위에 두 가지 시각화 차트 추가.  
+- **난이도별 픽률**: lunatic/torment/insane/extreme별 픽률 가로 막대 차트 (난이도마다 색상 구분)  
+- **보스별 픽률**: 해당 학생이 많이 기용된 보스 TOP 7 가로 막대 차트  
+**버그**: `RawSubmission` 인터페이스에 `boss_id` 필드 누락으로 차트 데이터가 비어있던 문제 수정.  
+**파일**: `app/students/[id]/page.tsx`
+
+---
+
 ## 2026-06-23
 
 ### 학생 상세 스탠딩 일러스트 크기 통일
