@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import { X, Search, Check } from 'lucide-react'
-import { Student } from '@/types'
-import { STUDENTS, getSchoolColor } from '@/data/students'
+import { STUDENTS } from '@/data/students'
 import StudentAvatar from '@/components/ui/StudentAvatar'
 
 const SCHOOLS = ['전체', 'Gehenna', 'Trinity', 'Millennium', 'Abydos', 'Hyakkiyako', 'RedWinter', 'Shanhaijing', 'Arius', 'SRT', 'Valkyrie', 'WildHunt', 'Highlander', 'Sakugawa', 'Tokiwadai', 'ETC']
@@ -61,152 +61,182 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
     )
   }
 
-  return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-      <div style={{ background: 'var(--bg-surface)', borderRadius: 14, width: '100%', maxWidth: 720, height: '90vh', display: 'flex', flexDirection: 'column' }}>
+  const filterBtnStyle = (active: boolean) => ({
+    padding: '3px 8px', borderRadius: 4, fontSize: 13,
+    border: `1px solid ${active ? 'var(--accent)' : 'var(--border)'}`,
+    background: active ? 'var(--bg-accent)' : 'transparent',
+    color: active ? 'var(--accent)' : 'var(--text-secondary)',
+    cursor: 'pointer', fontWeight: active ? 600 : 400,
+  })
 
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.15 }}
+      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: 8 }}
+        transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+        style={{ background: 'var(--bg-surface)', borderRadius: 14, width: '100%', maxWidth: 760, height: '90vh', display: 'flex', flexDirection: 'column' }}
+      >
         {/* 헤더 */}
         <div style={{ padding: '20px 28px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <div>
-            <div style={{ fontSize: 20, fontWeight: 600, color: 'var(--text-primary)' }}>{title}</div>
-            <div style={{ fontSize: 15, color: 'var(--text-muted)', marginTop: 3 }}>
+            <div style={{ fontSize: 22, fontWeight: 600, color: 'var(--text-primary)' }}>{title}</div>
+            <div style={{ fontSize: 17, color: 'var(--text-muted)', marginTop: 3 }}>
               {roleFilter === 'striker' ? '스트라이커' : roleFilter === 'special' ? '스페셜' : ''} 최대 {maxCount}명 · {selected.length}명 선택됨
             </div>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
+          <motion.button
+            whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+            onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+          >
             <X size={22} />
-          </button>
+          </motion.button>
         </div>
 
-        {/* 검색 */}
-        <div style={{ padding: '16px 28px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
-          <div style={{ position: 'relative', marginBottom: 12 }}>
-            <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-            <input
-              type="text"
-              placeholder="학생 이름 검색"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              style={{ width: '100%', padding: '9px 12px 9px 36px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg-surface-2)', color: 'var(--text-primary)', fontSize: 16, outline: 'none' }}
-            />
-          </div>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            {SCHOOLS.map(s => (
-              <button
-                key={s}
-                onClick={() => setSchool(s)}
-                style={{
-                  padding: '4px 11px', borderRadius: 5, fontSize: 14,
-                  border: `1px solid ${school === s ? 'var(--accent)' : 'var(--border)'}`,
-                  background: school === s ? 'var(--bg-accent)' : 'var(--bg-surface-2)',
-                  color: school === s ? 'var(--accent)' : 'var(--text-secondary)',
-                  cursor: 'pointer', fontWeight: school === s ? 500 : 400,
-                }}
-              >
-                {s === '전체' ? '전체' : (SCHOOL_KO[s] ?? s)}
-              </button>
-            ))}
-          </div>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center', marginTop: 8 }}>
-            <span style={{ fontSize: 13, color: 'var(--text-muted)', width: 28, flexShrink: 0 }}>공격</span>
-            {ATTACK_TYPES.map(t => (
-              <button
-                key={t}
-                onClick={() => setAttackType(t)}
-                style={{
-                  padding: '4px 11px', borderRadius: 5, fontSize: 14,
-                  border: `1px solid ${attackType === t ? 'var(--accent)' : 'var(--border)'}`,
-                  background: attackType === t ? 'var(--bg-accent)' : 'var(--bg-surface-2)',
-                  color: attackType === t ? 'var(--accent)' : 'var(--text-secondary)',
-                  cursor: 'pointer', fontWeight: attackType === t ? 500 : 400,
-                }}
-              >
-                {t === '전체' ? '전체' : ATTACK_KO[t]}
-              </button>
-            ))}
-          </div>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center', marginTop: 6 }}>
-            <span style={{ fontSize: 13, color: 'var(--text-muted)', width: 28, flexShrink: 0 }}>방어</span>
-            {ARMOR_TYPES.map(t => (
-              <button
-                key={t}
-                onClick={() => setArmorType(t)}
-                style={{
-                  padding: '4px 11px', borderRadius: 5, fontSize: 14,
-                  border: `1px solid ${armorType === t ? 'var(--accent)' : 'var(--border)'}`,
-                  background: armorType === t ? 'var(--bg-accent)' : 'var(--bg-surface-2)',
-                  color: armorType === t ? 'var(--accent)' : 'var(--text-secondary)',
-                  cursor: 'pointer', fontWeight: armorType === t ? 500 : 400,
-                }}
-              >
-                {t === '전체' ? '전체' : ARMOR_KO[t]}
-              </button>
-            ))}
-          </div>
-        </div>
+        {/* 바디: 사이드바 + 콘텐츠 */}
+        <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
 
-        {/* 학생 그리드 */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 28px', scrollbarGutter: 'stable' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 100px)', justifyContent: 'space-between', gap: 10 }}>
-            {filtered.map(student => {
-              const isSelected = selected.includes(student.id)
-              const isFull = !isSelected && selected.length >= maxCount
-              return (
-                <button
-                  key={student.id}
-                  onClick={() => toggle(student.id)}
-                  disabled={isFull}
-                  style={{
-                    padding: '10px 6px',
-                    borderRadius: 10,
-                    border: `1.5px solid ${isSelected ? 'var(--accent)' : 'var(--border)'}`,
-                    background: isSelected ? 'var(--bg-accent)' : 'var(--bg-surface-2)',
-                    cursor: isFull ? 'not-allowed' : 'pointer',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-                    opacity: isFull ? 0.4 : 1,
-                    position: 'relative',
-                    transition: 'all 0.1s',
-                  }}
+          {/* 왼쪽 사이드바 */}
+          <div style={{ width: 160, flexShrink: 0, borderRight: '1px solid var(--border)', overflowY: 'auto', padding: '16px 14px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 8, letterSpacing: '0.03em' }}>학원</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                {SCHOOLS.map(s => (
+                  <motion.button key={s} whileTap={{ scale: 0.92 }} onClick={() => setSchool(s)} style={filterBtnStyle(school === s)}>
+                    {s === '전체' ? '전체' : (SCHOOL_KO[s] ?? s)}
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 8, letterSpacing: '0.03em' }}>공격 타입</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                {ATTACK_TYPES.map(t => (
+                  <motion.button key={t} whileTap={{ scale: 0.92 }} onClick={() => setAttackType(t)} style={filterBtnStyle(attackType === t)}>
+                    {t === '전체' ? '전체' : ATTACK_KO[t]}
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 8, letterSpacing: '0.03em' }}>방어 타입</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                {ARMOR_TYPES.map(t => (
+                  <motion.button key={t} whileTap={{ scale: 0.92 }} onClick={() => setArmorType(t)} style={filterBtnStyle(armorType === t)}>
+                    {t === '전체' ? '전체' : ARMOR_KO[t]}
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 오른쪽: 검색 + 그리드 */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
+              <div style={{ position: 'relative' }}>
+                <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                <input
+                  type="text"
+                  placeholder="학생 이름 검색"
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  style={{ width: '100%', padding: '9px 12px 9px 36px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg-surface-2)', color: 'var(--text-primary)', fontSize: 18, outline: 'none' }}
+                />
+              </div>
+            </div>
+
+            <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', scrollbarGutter: 'stable' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 100px)', justifyContent: 'space-between', gap: 10 }}>
+                {filtered.map((student, i) => {
+                  const isSelected = selected.includes(student.id)
+                  const isFull = !isSelected && selected.length >= maxCount
+                  return (
+                    <motion.button
+                      key={student.id}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: isFull ? 0.4 : 1, y: 0 }}
+                      transition={{ delay: Math.min(i * 0.012, 0.3), duration: 0.2 }}
+                      whileHover={!isFull ? { scale: 1.06 } : undefined}
+                      whileTap={!isFull ? { scale: 0.94 } : undefined}
+                      onClick={() => toggle(student.id)}
+                      disabled={isFull}
+                      style={{
+                        padding: '10px 6px', borderRadius: 10,
+                        border: `1.5px solid ${isSelected ? 'var(--accent)' : 'var(--border)'}`,
+                        background: isSelected ? 'var(--bg-accent)' : 'var(--bg-surface-2)',
+                        cursor: isFull ? 'not-allowed' : 'pointer',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+                        position: 'relative',
+                      }}
+                    >
+                      <AnimatePresence>
+                        {isSelected && (
+                          <motion.div
+                            initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                            transition={{ type: 'spring', damping: 18, stiffness: 400 }}
+                            style={{ position: 'absolute', top: 5, right: 5, width: 16, height: 16, borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                          >
+                            <Check size={10} color="#fff" strokeWidth={3} />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                      <StudentAvatar student={student} size={62} radius={12} fontSize={13} />
+                      <div style={{ fontSize: 12, color: isSelected ? 'var(--accent)' : 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.3, width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {student.nameKo}
+                      </div>
+                    </motion.button>
+                  )
+                })}
+              </div>
+              {filtered.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)', fontSize: 18 }}
                 >
-                  {isSelected && (
-                    <div style={{ position: 'absolute', top: 5, right: 5, width: 16, height: 16, borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Check size={10} color="#fff" strokeWidth={3} />
-                    </div>
-                  )}
-                  <StudentAvatar student={student} size={62} radius={12} fontSize={13} />
-                  <div style={{ fontSize: 13, color: isSelected ? 'var(--accent)' : 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.3, width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {student.nameKo}
-                  </div>
-                </button>
-              )
-            })}
+                  검색 결과가 없어요
+                </motion.div>
+              )}
+            </div>
           </div>
-          {filtered.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)', fontSize: 16 }}>검색 결과가 없어요</div>
-          )}
         </div>
 
         {/* 선택된 학생 미리보기 + 확인 */}
         <div style={{ padding: '16px 28px', borderTop: '1px solid var(--border)', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ flex: 1, display: 'flex', gap: 8 }}>
-            {Array.from({ length: maxCount }).map((_, i) => {
-              const id = selected[i]
-              const s = id ? STUDENTS.find(x => x.id === id) : null
-              return s ? (
-                <StudentAvatar key={i} student={s} size={40} radius={9} fontSize={11} />
-              ) : (
-                <div key={i} style={{ width: 40, height: 40, borderRadius: 9, border: '1.5px dashed var(--border)', background: 'var(--bg-surface-2)' }} />
-              )
-            })}
+            <AnimatePresence mode="popLayout">
+              {Array.from({ length: maxCount }).map((_, i) => {
+                const id = selected[i]
+                const s = id ? STUDENTS.find(x => x.id === id) : null
+                return s ? (
+                  <motion.div
+                    key={id}
+                    initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.5, opacity: 0 }}
+                    transition={{ type: 'spring', damping: 20, stiffness: 360 }}
+                  >
+                    <StudentAvatar student={s} size={40} radius={9} fontSize={11} />
+                  </motion.div>
+                ) : (
+                  <div key={`empty-${i}`} style={{ width: 40, height: 40, borderRadius: 9, border: '1.5px dashed var(--border)', background: 'var(--bg-surface-2)', flexShrink: 0 }} />
+                )
+              })}
+            </AnimatePresence>
           </div>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
             onClick={() => onConfirm(selected)}
-            style={{ padding: '11px 28px', borderRadius: 9, border: 'none', background: 'var(--accent)', color: '#fff', fontSize: 17, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}
+            style={{ padding: '11px 28px', borderRadius: 9, border: 'none', background: 'var(--accent)', color: '#fff', fontSize: 19, fontWeight: 600, cursor: 'pointer', flexShrink: 0 }}
           >
             확인
-          </button>
+          </motion.button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 }

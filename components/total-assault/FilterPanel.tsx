@@ -25,7 +25,7 @@ function Chip({ active, label, onClick }: { active: boolean; label: string; onCl
     <button
       onClick={onClick}
       style={{
-        fontSize: 14,
+        fontSize: 16,
         padding: '4px 10px',
         borderRadius: 5,
         border: `1px solid ${active ? 'var(--accent)' : 'var(--border)'}`,
@@ -44,10 +44,10 @@ function Chip({ active, label, onClick }: { active: boolean; label: string; onCl
 export default function FilterPanel({ filters, onChange, totalCount, availableDifficulties }: Props) {
   return (
     <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 10, padding: '14px 16px', marginBottom: 12 }}>
-      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--accent)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
+      <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--accent)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
         필터
       </div>
-      <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 6 }}>난이도</div>
+      <div style={{ fontSize: 15, color: 'var(--text-muted)', marginBottom: 6 }}>난이도</div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
         <Chip
           active={filters.difficulty === 'all'}
@@ -63,7 +63,7 @@ export default function FilterPanel({ filters, onChange, totalCount, availableDi
           />
         ))}
       </div>
-      <div style={{ fontSize: 13, color: 'var(--text-muted)', paddingTop: 10, borderTop: '1px solid var(--border)' }}>
+      <div style={{ fontSize: 15, color: 'var(--text-muted)', paddingTop: 10, borderTop: '1px solid var(--border)' }}>
         {totalCount.toLocaleString()}개 기록
       </div>
     </div>

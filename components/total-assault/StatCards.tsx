@@ -1,3 +1,5 @@
+import { motion } from 'motion/react'
+
 interface Props {
   totalSubmissions: number
   avgScore: number
@@ -11,9 +13,12 @@ export default function StatCards({ totalSubmissions, avgScore }: Props) {
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
-      {cards.map(card => (
-        <div
+      {cards.map((card, i) => (
+        <motion.div
           key={card.label}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.08, duration: 0.3, ease: 'easeOut' }}
           style={{
             background: 'var(--bg-surface)',
             border: '1px solid var(--border)',
@@ -21,11 +26,11 @@ export default function StatCards({ totalSubmissions, avgScore }: Props) {
             padding: '14px 16px',
           }}
         >
-          <div style={{ fontSize: 24, fontWeight: 600, color: card.accent ? 'var(--accent)' : 'var(--text-primary)' }}>
+          <div style={{ fontSize: 26, fontWeight: 600, color: card.accent ? 'var(--accent)' : 'var(--text-primary)' }}>
             {card.value}
           </div>
-          <div style={{ fontSize: 14, color: 'var(--text-secondary)', marginTop: 3 }}>{card.label}</div>
-        </div>
+          <div style={{ fontSize: 16, color: 'var(--text-secondary)', marginTop: 3 }}>{card.label}</div>
+        </motion.div>
       ))}
     </div>
   )
