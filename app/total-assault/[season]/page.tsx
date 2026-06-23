@@ -207,18 +207,17 @@ function SeasonDetailContent() {
               </p>
               <button
                 onClick={() => setShowModal(true)}
-                disabled={!isCurrent}
                 style={{
                   width: '100%', padding: '9px', borderRadius: 8, border: 'none',
-                  background: isCurrent ? 'var(--accent)' : 'var(--bg-surface-2)',
-                  color: isCurrent ? '#fff' : 'var(--text-muted)',
+                  background: 'var(--accent)',
+                  color: '#fff',
                   fontSize: 13, fontWeight: 500,
-                  cursor: isCurrent ? 'pointer' : 'not-allowed',
+                  cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginBottom: 8,
                 }}
               >
                 <Upload size={13} />
-                {isCurrent ? '기록 제출하기' : '종료된 시즌'}
+                기록 제출하기
               </button>
               <button
                 onClick={fetchSubmissions}

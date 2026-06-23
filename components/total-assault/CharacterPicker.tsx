@@ -18,11 +18,12 @@ interface Props {
   selected: string[]
   excluded: string[]
   maxCount: number
+  roleFilter?: 'striker' | 'special'
   onConfirm: (ids: string[]) => void
   onClose: () => void
 }
 
-export default function CharacterPicker({ title, selected: initialSelected, excluded, maxCount, onConfirm, onClose }: Props) {
+export default function CharacterPicker({ title, selected: initialSelected, excluded, maxCount, roleFilter, onConfirm, onClose }: Props) {
   const [query, setQuery] = useState('')
   const [school, setSchool] = useState('전체')
   const [selected, setSelected] = useState<string[]>(initialSelected)
@@ -30,11 +31,12 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
   const filtered = useMemo(() => {
     return STUDENTS.filter(s => {
       if (excluded.includes(s.id)) return false
+      if (roleFilter && s.role !== roleFilter) return false
       if (school !== '전체' && s.school !== school) return false
       if (query && !s.nameKo.includes(query) && !s.nameEn.toLowerCase().includes(query.toLowerCase())) return false
       return true
     })
-  }, [query, school, excluded])
+  }, [query, school, excluded, roleFilter])
 
   const toggle = (id: string) => {
     setSelected(prev =>
@@ -50,7 +52,9 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
         <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <div>
             <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>{title}</div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>최대 {maxCount}명 · {selected.length}명 선택됨</div>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>
+              {roleFilter === 'striker' ? '스트라이커' : roleFilter === 'special' ? '스페셜' : ''} 최대 {maxCount}명 · {selected.length}명 선택됨
+            </div>
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
             <X size={18} />
@@ -90,7 +94,7 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
 
         {/* 학생 그리드 */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '12px 20px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(72px, 1fr))', gap: 8 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(88px, 1fr))', gap: 8 }}>
             {filtered.map(student => {
               const isSelected = selected.includes(student.id)
               const isFull = !isSelected && selected.length >= maxCount
@@ -116,7 +120,7 @@ export default function CharacterPicker({ title, selected: initialSelected, excl
                       <Check size={9} color="#fff" strokeWidth={3} />
                     </div>
                   )}
-                  <StudentAvatar student={student} size={36} radius={8} fontSize={11} />
+                  <StudentAvatar student={student} size={52} radius={10} fontSize={12} />
                   <div style={{ fontSize: 10, color: isSelected ? 'var(--accent)' : 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.3, width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {student.nameKo}
                   </div>

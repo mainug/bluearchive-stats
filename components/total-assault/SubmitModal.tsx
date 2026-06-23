@@ -21,6 +21,8 @@ interface Props {
 
 const MAX_PARTIES = 6
 
+type Party = { strikers: string[]; specials: string[] }
+
 function SelectBtn({ value, current, onClick, children }: { value: string; current: string; onClick: () => void; children: React.ReactNode }) {
   return (
     <button onClick={onClick} style={{
@@ -35,68 +37,99 @@ function SelectBtn({ value, current, onClick, children }: { value: string; curre
   )
 }
 
+function Slot({ id, size = 34 }: { id?: string; size?: number }) {
+  const s = id ? STUDENTS.find(x => x.id === id) : null
+  return s
+    ? <StudentAvatar student={s} size={size} radius={8} fontSize={10} />
+    : <div style={{ width: size, height: size, borderRadius: 8, border: '1.5px dashed var(--border)' }} />
+}
+
 function PartyRow({
-  index, party, onEdit, onRemove, canRemove,
+  index, party, onEditStrikers, onEditSpecials, onRemove, canRemove,
 }: {
-  index: number; party: string[]; onEdit: () => void; onRemove: () => void; canRemove: boolean
+  index: number
+  party: Party
+  onEditStrikers: () => void
+  onEditSpecials: () => void
+  onRemove: () => void
+  canRemove: boolean
 }) {
   return (
-    <div style={{ background: 'var(--bg-surface-2)', borderRadius: 9, padding: '10px 12px', display: 'flex', alignItems: 'center', gap: 10 }}>
-      <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', width: 30, flexShrink: 0 }}>{index + 1}파티</span>
-      <div style={{ display: 'flex', gap: 5, flex: 1 }}>
-        {Array.from({ length: 4 }).map((_, i) => {
-          const id = party[i]
-          const s = id ? STUDENTS.find(x => x.id === id) : null
-          return s ? (
-            <StudentAvatar key={i} student={s} size={34} radius={8} fontSize={10} />
-          ) : (
-            <div key={i} style={{ width: 34, height: 34, borderRadius: 8, border: '1.5px dashed var(--border)' }} />
-          )
-        })}
+    <div style={{ background: 'var(--bg-surface-2)', borderRadius: 9, padding: '10px 12px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+        <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', width: 38, flexShrink: 0 }}>{index + 1}파티</span>
+        {canRemove && (
+          <button onClick={onRemove} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 2, marginLeft: 'auto' }}>
+            <Trash2 size={13} />
+          </button>
+        )}
       </div>
-      <button onClick={onEdit} style={{
-        padding: '5px 10px', borderRadius: 6, border: '1px solid var(--border)',
-        background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontSize: 11,
-        cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0,
-      }}>
-        <Users size={11} />
-        {party.length > 0 ? '수정' : '선택'}
-      </button>
-      {canRemove && (
-        <button onClick={onRemove} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 2, flexShrink: 0 }}>
-          <Trash2 size={14} />
-        </button>
-      )}
+      <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+        {/* 스트라이커 */}
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 4 }}>스트라이커</div>
+          <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+            {Array.from({ length: 4 }).map((_, i) => <Slot key={i} id={party.strikers[i]} />)}
+            <button onClick={onEditStrikers} style={{
+              padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border)',
+              background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontSize: 10,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 3, flexShrink: 0, marginLeft: 2,
+            }}>
+              <Users size={10} />
+              {party.strikers.length > 0 ? '수정' : '선택'}
+            </button>
+          </div>
+        </div>
+        {/* 구분선 */}
+        <div style={{ width: 1, height: 50, background: 'var(--border)', flexShrink: 0 }} />
+        {/* 스페셜 */}
+        <div>
+          <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 4 }}>스페셜</div>
+          <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+            {Array.from({ length: 2 }).map((_, i) => <Slot key={i} id={party.specials[i]} />)}
+            <button onClick={onEditSpecials} style={{
+              padding: '4px 8px', borderRadius: 6, border: '1px solid var(--border)',
+              background: 'var(--bg-surface)', color: 'var(--text-secondary)', fontSize: 10,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 3, flexShrink: 0, marginLeft: 2,
+            }}>
+              <Users size={10} />
+              {party.specials.length > 0 ? '수정' : '선택'}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
+
+type PickerState = { partyIndex: number; role: 'striker' | 'special' } | null
 
 export default function SubmitModal({ boss, availableDifficulties, onClose, onSubmit }: Props) {
   const [difficulty, setDifficulty] = useState<Difficulty>(
     availableDifficulties[0] ?? 'insane'
   )
   const [score, setScore] = useState('')
-  const [parties, setParties] = useState<string[][]>([[]])
-  const [pickerIndex, setPickerIndex] = useState<number | null>(null)
+  const [parties, setParties] = useState<Party[]>([{ strikers: [], specials: [] }])
+  const [pickerState, setPickerState] = useState<PickerState>(null)
   const [submitting, setSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
 
-  const canSubmit = parties[0]?.length >= 1 && score.trim() !== ''
+  const canSubmit = parties[0]?.strikers.length >= 1 && score.trim() !== ''
 
   const addParty = () => {
-    if (parties.length < MAX_PARTIES) setParties(prev => [...prev, []])
+    if (parties.length < MAX_PARTIES) setParties(prev => [...prev, { strikers: [], specials: [] }])
   }
 
   const removeParty = (i: number) => {
     setParties(prev => prev.filter((_, idx) => idx !== i))
   }
 
-  const updateParty = (i: number, ids: string[]) => {
-    setParties(prev => prev.map((p, idx) => idx === i ? ids : p))
+  const updatePartyRole = (i: number, role: 'striker' | 'special', ids: string[]) => {
+    setParties(prev => prev.map((p, idx) => idx === i ? { ...p, [role + 's']: ids } : p))
   }
 
-  const excludedFor = (index: number) =>
-    parties.flatMap((p, i) => i !== index ? p : [])
+  const allSelected = (excludeIndex: number) =>
+    parties.flatMap((p, i) => i !== excludeIndex ? [...p.strikers, ...p.specials] : [])
 
   const handleSubmit = async () => {
     if (!canSubmit || submitting) return
@@ -105,7 +138,10 @@ export default function SubmitModal({ boss, availableDifficulties, onClose, onSu
     setSubmitting(true)
     setErrorMsg('')
     try {
-      await onSubmit({ difficulty, score: parsed, parties: parties.filter(p => p.length > 0) })
+      const flatParties = parties
+        .map(p => [...p.strikers, ...p.specials])
+        .filter(p => p.length > 0)
+      await onSubmit({ difficulty, score: parsed, parties: flatParties })
       onClose()
     } catch (e: any) {
       setErrorMsg(e?.message ?? '제출 중 오류가 발생했습니다')
@@ -155,7 +191,8 @@ export default function SubmitModal({ boss, availableDifficulties, onClose, onSu
                   key={i}
                   index={i}
                   party={party}
-                  onEdit={() => setPickerIndex(i)}
+                  onEditStrikers={() => setPickerState({ partyIndex: i, role: 'striker' })}
+                  onEditSpecials={() => setPickerState({ partyIndex: i, role: 'special' })}
                   onRemove={() => removeParty(i)}
                   canRemove={parties.length > 1}
                 />
@@ -198,16 +235,21 @@ export default function SubmitModal({ boss, availableDifficulties, onClose, onSu
         </div>
       </div>
 
-      {pickerIndex !== null && (
-        <CharacterPicker
-          title={`${pickerIndex + 1}파티 선택`}
-          selected={parties[pickerIndex] ?? []}
-          excluded={excludedFor(pickerIndex)}
-          maxCount={4}
-          onConfirm={ids => { updateParty(pickerIndex, ids); setPickerIndex(null) }}
-          onClose={() => setPickerIndex(null)}
-        />
-      )}
+      {pickerState !== null && (() => {
+        const { partyIndex, role } = pickerState
+        const party = parties[partyIndex]
+        return (
+          <CharacterPicker
+            title={`${partyIndex + 1}파티`}
+            selected={role === 'striker' ? party.strikers : party.specials}
+            excluded={allSelected(partyIndex)}
+            maxCount={role === 'striker' ? 4 : 2}
+            roleFilter={role}
+            onConfirm={ids => { updatePartyRole(partyIndex, role, ids); setPickerState(null) }}
+            onClose={() => setPickerState(null)}
+          />
+        )
+      })()}
     </>
   )
 }

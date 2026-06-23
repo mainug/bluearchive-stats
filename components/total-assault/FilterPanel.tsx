@@ -14,6 +14,7 @@ interface Props {
 }
 
 const DIFFICULTY_OPTIONS: { value: Difficulty; label: string }[] = [
+  { value: 'lunatic', label: '루나틱' },
   { value: 'torment', label: '토먼트' },
   { value: 'insane', label: '인세인' },
   { value: 'extreme', label: '익스트림' },

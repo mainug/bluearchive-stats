@@ -134,6 +134,7 @@ export const DIFFICULTY_LABEL: Record<string, string> = {
   extreme: '익스트림',
   insane: '인세인',
   torment: '토먼트',
+  lunatic: '루나틱',
 }
 
 export const ATTACK_TYPE_LABEL: Record<string, string> = {
@@ -153,5 +154,10 @@ export function getAvailableDifficulties(server: string, season: number): Diffic
   const hasTorment =
     (server === 'jp' && season >= 47) ||
     (server === 'global' && season >= 44)
-  return hasTorment ? ['torment', 'insane', 'extreme'] : ['insane', 'extreme']
+  const hasLunatic =
+    (server === 'jp' && season >= 74) ||
+    (server === 'global' && season >= 71)
+  if (hasLunatic) return ['lunatic', 'torment', 'insane', 'extreme']
+  if (hasTorment) return ['torment', 'insane', 'extreme']
+  return ['insane', 'extreme']
 }

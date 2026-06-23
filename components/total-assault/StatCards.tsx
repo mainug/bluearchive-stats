@@ -1,18 +1,16 @@
 interface Props {
   totalSubmissions: number
   avgScore: number
-  ssRate: number
 }
 
-export default function StatCards({ totalSubmissions, avgScore, ssRate }: Props) {
+export default function StatCards({ totalSubmissions, avgScore }: Props) {
   const cards = [
     { label: '클리어 제출', value: totalSubmissions.toLocaleString() },
     { label: '평균 점수', value: avgScore.toLocaleString(), accent: true },
-    { label: 'SS 달성률', value: `${ssRate}%` },
   ]
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
       {cards.map(card => (
         <div
           key={card.label}

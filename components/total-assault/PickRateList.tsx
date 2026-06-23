@@ -22,7 +22,7 @@ export default function PickRateList({ picks }: Props) {
           style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', borderBottom: i < picks.length - 1 ? '1px solid var(--bg-surface-2)' : 'none' }}
         >
           <span style={{ fontSize: 11, color: 'var(--text-muted)', width: 18, textAlign: 'center', flexShrink: 0 }}>{i + 1}</span>
-          <StudentAvatar student={pick.student} size={34} radius={8} />
+          <StudentAvatar student={pick.student} size={44} radius={10} />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {pick.student.nameKo}
