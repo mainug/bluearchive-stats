@@ -11,7 +11,7 @@ interface Props {
 export default function StudentAvatar({ student, size = 34, radius = 8, fontSize = 11 }: Props) {
   const color = getSchoolColor(student.school)
   const initials = student.nameKo.replace(/[^가-힣a-zA-Z]/g, '').slice(0, 2)
-  const imageUrl = `https://raw.githubusercontent.com/SchaleDB/SchaleDB/main/images/student/icon/${student.schaleId}.webp`
+  const imageUrl = `https://schaledb.com/images/student/icon/${student.schaleId}.webp`
 
   return (
     <div
