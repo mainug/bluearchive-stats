@@ -71,3 +71,10 @@
 ### JP 픽커 서버 인식 버그
 **문제**: CharacterPicker가 server prop을 받지 않아 JP 서버 제출 시에도 released:false 캐릭터(JP 선출시 13명)가 필터링됨.  
 **해결**: `server?: 'global' | 'jp'` prop을 `page.tsx → SubmitModal → CharacterPicker`로 전달. 필터 조건: `if (!s.released && server !== 'jp') return false`.
+
+---
+
+### 학생 아이콘 이미지 미표시 (신규 캐릭터)
+**문제**: `StudentAvatar`가 `raw.githubusercontent.com/SchaleDB/SchaleDB` GitHub raw URL에서 이미지를 가져왔는데, JSON 데이터가 outdated였던 것처럼 이미지 레포도 새로 추가한 70명의 이미지가 없을 수 있음.  
+**해결**: 이미지 URL을 `schaledb.com/images/student/icon/{schaleId}.webp`로 교체. 데이터 소스와 동일한 최신 소스를 쓰므로 264명 전원 커버.  
+**파일**: `components/ui/StudentAvatar.tsx:14`
