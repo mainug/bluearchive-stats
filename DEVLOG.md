@@ -2,6 +2,17 @@
 
 ---
 
+## 2026-06-25
+
+### 메인 페이지 구현
+**내용**: `app/page.tsx` redirect 제거, 유즈트렌즈(yuzutrends.app) 참고한 랜딩 페이지로 교체.  
+- **현재 총력전 카드**: Supabase `seasons`에서 서버별 최신 시즌 fetch. 보스 이미지를 카드 배경으로 사용 + 다크 그라디언트 오버레이. LIVE/예정 배지, 남은 일수, 지형 배지 표시.  
+- **바로가기 카드**: 총력전 목록, 학생 픽률 2열 카드.  
+**버그**: `schaledb.com/images/raid/Boss_Binah.png` 경로가 실제로는 SPA index.html을 반환함(`Content-Type: text/html`). DevTools로 실제 경로 확인 — `Boss_Portrait_{Name}_Lobby.png` 패턴. `bosses.ts` 전체 imageUrl 수정.  
+**파일**: `app/page.tsx`, `data/bosses.ts`
+
+---
+
 ## 2026-06-23 (2)
 
 ### 학생 상세 페이지 개선
