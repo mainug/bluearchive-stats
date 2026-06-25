@@ -7,7 +7,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Chesed',
     terrain: 'outdoor',
     weaknesses: ['explosive'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_Chesed.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_Chesed_Lobby.png',
   },
   {
     id: 'binah',
@@ -15,7 +15,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Binah',
     terrain: 'outdoor',
     weaknesses: ['explosive'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_Binah.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_Binah_Lobby.png',
   },
   {
     id: 'shiroKuro',
@@ -23,7 +23,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'ShiroKuro',
     terrain: 'urban',
     weaknesses: ['explosive'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_ShiroKuro.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_ShiroKuro_Lobby.png',
   },
   {
     id: 'kaitenFX',
@@ -31,7 +31,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Kaiten FX Mk.0',
     terrain: 'outdoor',
     weaknesses: ['piercing'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_Kaiten.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_Kaiten_Lobby.png',
   },
   {
     id: 'hieronymus',
@@ -39,7 +39,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Hieronymus',
     terrain: 'indoor',
     weaknesses: ['mystic'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_Hieronymus.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_Hieronymus_Lobby.png',
   },
   {
     id: 'hod',
@@ -47,7 +47,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Hod',
     terrain: 'urban',
     weaknesses: ['piercing'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_Hod.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_Hod_Lobby.png',
   },
   {
     id: 'netzach',
@@ -55,7 +55,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Netzach',
     terrain: 'outdoor',
     weaknesses: ['explosive'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_Netzach.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_Netzach_Lobby.png',
   },
   {
     id: 'perorosPeak',
@@ -63,7 +63,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Perorodzilla',
     terrain: 'outdoor',
     weaknesses: ['mystic'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_PerorosPeak.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_PerorosPeak_Lobby.png',
   },
   {
     id: 'goz',
@@ -71,7 +71,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Goz',
     terrain: 'indoor',
     weaknesses: ['sonic'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_Goz.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_Goz_Lobby.png',
   },
   {
     id: 'gregorius',
@@ -79,7 +79,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Gregorius',
     terrain: 'indoor',
     weaknesses: ['explosive'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_Gregorius.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_Gregorius_Lobby.png',
   },
   {
     id: 'hovercraft',
@@ -87,7 +87,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Hovercraft',
     terrain: 'outdoor',
     weaknesses: ['explosive'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_Hovercraft.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_Hovercraft_Lobby.png',
   },
   {
     id: 'kurokage',
@@ -95,7 +95,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Myouki Kurokage',
     terrain: 'urban',
     weaknesses: ['mystic'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_Kurokage.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_Kurokage_Lobby.png',
   },
   {
     id: 'geburah',
@@ -103,7 +103,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Geburah',
     terrain: 'outdoor',
     weaknesses: ['piercing'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_Geburah.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_Geburah_Lobby.png',
   },
   {
     id: 'yesod',
@@ -111,7 +111,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Yesod',
     terrain: 'urban',
     weaknesses: ['explosive'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_Yesod.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_Yesod_Lobby.png',
   },
   {
     id: 'drumbarka',
@@ -119,7 +119,7 @@ export const BOSSES: Boss[] = [
     nameEn: 'Drumbarka',
     terrain: 'urban',
     weaknesses: ['explosive'],
-    imageUrl: 'https://schale.gg/images/raid/Boss_Drumbarka.png',
+    imageUrl: 'https://schaledb.com/images/raid/Boss_Portrait_Drumbarka_Lobby.png',
   },
 ]
 
