@@ -19,10 +19,10 @@ export default function Navbar() {
     <header style={{ background: 'var(--bg-surface)', borderBottom: '1px solid var(--border)' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', height: 52, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div>
+          <Link href="/" style={{ textDecoration: 'none' }}>
             <div style={{ fontSize: 19, fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.2 }}>BlueStats</div>
             <div style={{ fontSize: 14, color: 'var(--accent)', fontWeight: 500 }}>블루 아카이브 통계</div>
-          </div>
+          </Link>
         </div>
 
         <nav style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
