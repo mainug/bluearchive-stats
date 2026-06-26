@@ -7,7 +7,8 @@ import { useTheme } from './ThemeProvider'
 
 const NAV_ITEMS = [
   { href: '/total-assault', label: '총력전' },
-  { href: '/gacha-planner', label: '가챠 플래너' },
+  { href: '/gacha-planner', label: '모집 시뮬레이터' },
+  { href: '/students', label: '학생 픽률' },
   { href: '/calendar', label: '캘린더' },
 ]
 

@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'motion/react'
 import { supabase } from '@/lib/supabase'
 import { BOSSES, TERRAIN_LABEL } from '@/data/bosses'
+import { STUDENTS } from '@/data/students'
+import StudentAvatar from '@/components/ui/StudentAvatar'
 
 interface Season {
   season: number
@@ -127,7 +129,32 @@ function RaidCard({ season, delay }: { season: Season; delay: number }) {
   )
 }
 
+function getBirthdayStudents() {
+  const today = new Date()
+  const todayMonth = today.getMonth() + 1
+  const todayDay = today.getDate()
+
+  return STUDENTS
+    .filter(s => s.birthday && !s.nameKo.includes('('))
+    .map(s => {
+      const [m, d] = s.birthday!.split('/').map(Number)
+      // 올해 생일 기준 diff 계산
+      const thisYear = new Date(today.getFullYear(), m - 1, d)
+      const diff = Math.round((thisYear.getTime() - today.getTime()) / 86400000)
+      return { student: s, month: m, day: d, diff }
+    })
+    .filter(({ diff }) => diff >= -5 && diff <= 5)
+    .sort((a, b) => a.diff - b.diff)
+}
+
+function birthdayLabel(diff: number) {
+  if (diff === 0) return '🎂 오늘'
+  if (diff > 0) return `D-${diff}`
+  return `D+${Math.abs(diff)}`
+}
+
 export default function HomePage() {
+  const birthdayStudents = getBirthdayStudents()
   const router = useRouter()
   const [seasons, setSeasons] = useState<{ global: Season | null; jp: Season | null }>({ global: null, jp: null })
   const [loading, setLoading] = useState(true)
@@ -184,15 +211,51 @@ export default function HomePage() {
         )}
       </div>
 
+      {/* 생일 */}
+      {birthdayStudents.length > 0 && (
+        <div style={{ marginBottom: 48 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>
+            생일
+          </div>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            {birthdayStudents.map(({ student, month, day, diff }, i) => (
+              <motion.div
+                key={student.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 + i * 0.05, duration: 0.22, ease: 'easeOut' }}
+                onClick={() => router.push(`/students/${student.id}`)}
+                whileHover={{ scale: 1.04, borderColor: 'var(--accent)' }}
+                whileTap={{ scale: 0.97 }}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  background: 'var(--bg-surface)', border: diff === 0 ? '1.5px solid var(--accent)' : '1px solid var(--border)',
+                  borderRadius: 14, padding: '14px 18px', cursor: 'pointer',
+                }}
+              >
+                <StudentAvatar student={student} size={52} radius={12} />
+                <div>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)' }}>{student.nameKo}</div>
+                  <div style={{ fontSize: 13, color: diff === 0 ? 'var(--accent)' : 'var(--text-muted)', fontWeight: 500, marginTop: 2 }}>
+                    {birthdayLabel(diff)} · {month}/{day}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* 바로가기 */}
       <div>
         <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>
           바로가기
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
           {[
             { icon: '⚔️', title: '총력전', desc: '시즌별 보스와 팀 구성 통계', href: '/total-assault', delay: 0.22 },
             { icon: '📊', title: '학생 픽률', desc: '전체 학생 픽률 순위 및 상세 통계', href: '/students', delay: 0.28 },
+            { icon: '🎲', title: '모집 시뮬레이터', desc: '게임과 동일한 가챠 시뮬레이션', href: '/gacha-planner', delay: 0.33 },
           ].map(item => (
             <motion.button
               key={item.href}

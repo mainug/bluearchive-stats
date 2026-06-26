@@ -2,6 +2,40 @@
 
 ---
 
+## 2026-06-26
+
+### 모집 시뮬레이터 구현 (`/gacha-planner`)
+**내용**: 실제 블루 아카이브 모집 UI에 근접한 가챠 시뮬레이터 신규 추가.
+- **확률**: 3성 2.5%(픽업 0.7%), 2성 18.5%, 1성 79%, 천장 200회 보장
+- **결과 화면**: 게임과 동일한 5×2 카드 그리드. 등급별 테두리/글로우(3성 보라, 2성 골드, 1성 회색)
+- **3성 풀스크린 연출**: 3성 등장 시 자동 재생. 학원 마크(학교 컬러 배경 + schoolicon 이미지) → 탭 → 좌우 분할 화면(왼쪽: 이름·학교·픽업 배지, 오른쪽: portrait 이미지). 3성 여러 명이면 순서대로 자동 진행
+- **이미지**: 학원 아이콘 `schaledb.com/images/schoolicon/{School}.png` 확인. 카드·오버레이 이미지는 `icon/{schaleId}.webp` / `portrait/{schaleId}.webp` 각각 사용
+- **픽업 선택**: 드롭다운으로 픽업 학생 변경 시 세션 초기화
+- **통계**: 총 모집 수, 3성 수, 픽업 획득 수, 천장까지 남은 수 표시
+- **학원명**: 영문 → 한국어 표기 (게헨나, 밀레니엄, 트리니티 등)
+- **가챠 풀**: 1/2성 풀을 실제 게임 데이터 기반 24명으로 교체 (1성 9명, 2성 13명). SchaleDB schaleId 기준
+**파일**: `app/gacha-planner/page.tsx` (신규), `data/gachaPool.ts` (신규)
+
+### 학생 픽률 페이지 구현 (`/students`)
+**내용**: 전체 시즌 기준 학생별 픽률 순위 목록 페이지 신규 추가.  
+- Supabase `submissions` + `seasons` fetch 후 클라이언트에서 서버별 픽률 계산
+- Global/JP 서버 토글, URL 쿼리스트링(`?server=`) 연동
+- `pickCount` 누락으로 발생하던 TypeScript 타입 에러 수정  
+**파일**: `app/students/page.tsx` (신규)
+
+### 메인 페이지 생일 섹션 추가
+**내용**: 오늘 기준 D-5 ~ D+5 범위 학생 생일 카드 표시.  
+- SchaleDB `students.min.json`에서 BirthDay 필드 파싱 → `data/students.ts`에 `birthday: 'M/D'` 형식으로 일괄 주입
+- `()` 포함 이름(이격 캐릭터) 제외하여 원본 캐릭터만 표시
+- 생일 당일 카드에 accent 테두리, hover 시 scale 애니메이션, 클릭 시 학생 상세로 이동  
+**파일**: `app/page.tsx`, `data/students.ts`, `types/index.ts`
+
+### 내비게이션 및 메인 바로가기 확장
+**내용**: Navbar에 '모집 시뮬레이터', '학생 픽률' 링크 추가. 메인 페이지 바로가기를 3열로 확장하고 모집 시뮬레이터 카드 추가.  
+**파일**: `components/layout/Navbar.tsx`, `app/page.tsx`
+
+---
+
 ## 2026-06-25
 
 ### 메인 페이지 구현

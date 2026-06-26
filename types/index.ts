@@ -17,6 +17,7 @@ export interface Student {
   nameKo: string
   nameEn: string
   schaleId: number
+  birthday?: string
   school: string
   role: Role
   attackType: AttackType
